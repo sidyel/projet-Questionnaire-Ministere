@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 26 f?vr. 2025, 12:37:11 by Hibernate Tools 4.3.6.Final -->
+<hibernate-mapping>
+    <class name="org.entitee.Reponse" table="reponse" schema="public" optimistic-lock="version">
+        <id name="idreponse" type="int">
+            <column name="idreponse" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="employe" class="org.entitee.Employe" fetch="select">
+            <column name="idpersonne" not-null="true" />
+            <column name="idemploye" not-null="true" />
+        </many-to-one>
+        <many-to-one name="question" class="org.entitee.Question" fetch="select">
+            <column name="idquestion" not-null="true" />
+        </many-to-one>
+        <property name="valeur" type="string">
+            <column name="valeur" />
+        </property>
+        <property name="datereponse" type="string">
+            <column name="datereponse" length="254" />
+        </property>
+        <property name="etat" type="string">
+            <column name="etat" length="254" />
+        </property>
+        <property name="nombreaccesquestion" type="java.lang.Integer">
+            <column name="nombreaccesquestion" />
+        </property>
+        <property name="remarque" type="string">
+            <column name="remarque" />
+        </property>
+    </class>
+</hibernate-mapping>

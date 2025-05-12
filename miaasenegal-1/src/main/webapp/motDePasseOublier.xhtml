@@ -1,0 +1,41 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templateNonMenu.xhtml">
+
+    <ui:define name="title">Administration</ui:define>
+
+    <ui:define name="viewname">
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="messages" showDetail="true" life="3000" />
+            <!-- Remplacer h-screen par un style inline pour une hauteur de 50vh -->
+            <div class="flex justify-content-center align-items-center" style="height: 50vh;">
+                <div class="col-12 md:col-6">
+                    <p:panel header="Formulaire de reinitialisation du mots de passe "
+                        styleClass="shadow-2 border-round p-4">
+                        <div class="card ui-fluid">
+                            <div class="ui-fluid formgrid grid">
+                                <div class="field col-12 sm:col-6">
+                                    <p:outputLabel for="login" value="entre votre Login ou email " />
+                                    <p:inputText id="login" value="#{recupererCompte.recup}" required="true" />
+                                </div>
+                            </div>
+                            <p:commandButton value="Enregistrer"
+                                actionListener="#{recupererCompte.recuperer}" icon="pi pi-check"
+                                update="messages newPwdPanel" />
+                        </div>
+                        <p:outputPanel id="newPwdPanel"
+                            style="display: #{empty recupererCompte.newMotDePAsse ? 'none' : 'block'}; text-align:center; margin:20px 0;">
+                            <h4>Votre nouveau mot de passe est :</h4> #{recupererCompte.newMotDePAsse}
+                        </p:outputPanel>
+                    </p:panel>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

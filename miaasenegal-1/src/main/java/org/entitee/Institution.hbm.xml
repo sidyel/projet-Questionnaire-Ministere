@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 26 f?vr. 2025, 12:37:11 by Hibernate Tools 4.3.6.Final -->
+<hibernate-mapping>
+    <class name="org.entitee.Institution" table="institution" schema="public" optimistic-lock="version">
+        <id name="idins" type="int">
+            <column name="idins" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="categorieinstitution" class="org.entitee.Categorieinstitution" fetch="select">
+            <column name="idcatins" not-null="true" />
+        </many-to-one>
+        <property name="libelle" type="string">
+            <column name="libelle" length="254" />
+        </property>
+        <property name="code" type="java.lang.Integer">
+            <column name="code" />
+        </property>
+        <property name="datecreation" type="string">
+            <column name="datecreation" length="254" />
+        </property>
+        <property name="nombremembres" type="java.lang.Integer">
+            <column name="nombremembres" />
+        </property>
+        <property name="etat" type="string">
+            <column name="etat" length="254" />
+        </property>
+        <set name="projets" table="projet" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idins" not-null="true" />
+            </key>
+            <one-to-many class="org.entitee.Projet" />
+        </set>
+        <set name="divisions" table="division" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idins" not-null="true" />
+            </key>
+            <one-to-many class="org.entitee.Division" />
+        </set>
+        <set name="employes" table="employe" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idins" not-null="true" />
+            </key>
+            <one-to-many class="org.entitee.Employe" />
+        </set>
+    </class>
+</hibernate-mapping>

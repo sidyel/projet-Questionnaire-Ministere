@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 26 f?vr. 2025, 12:37:11 by Hibernate Tools 4.3.6.Final -->
+<hibernate-mapping>
+    <class name="org.entitee.Questionnaire" table="questionnaire" schema="public" optimistic-lock="version">
+        <id name="idquestionnaire" type="int">
+            <column name="idquestionnaire" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="projet" class="org.entitee.Projet" fetch="select">
+            <column name="idprojet" not-null="true" />
+        </many-to-one>
+        <property name="libelle" type="string">
+            <column name="libelle" length="254" />
+        </property>
+        <property name="objectif" type="string">
+            <column name="objectif" />
+        </property>
+        <property name="code" type="java.lang.Integer">
+            <column name="code" />
+        </property>
+        <property name="datecreation" type="string">
+            <column name="datecreation" length="254" />
+        </property>
+        <property name="nombrequestions" type="java.lang.Integer">
+            <column name="nombrequestions" />
+        </property>
+        <property name="nombreacces" type="java.lang.Integer">
+            <column name="nombreacces" />
+        </property>
+        <property name="nombretraitements" type="java.lang.Integer">
+            <column name="nombretraitements" />
+        </property>
+        <property name="etat" type="string">
+            <column name="etat" length="254" />
+        </property>
+        <property name="datedebut" type="string">
+            <column name="datedebut" length="254" />
+        </property>
+        <property name="datefin" type="string">
+            <column name="datefin" length="254" />
+        </property>
+        <property name="remarque" type="string">
+            <column name="remarque" />
+        </property>
+        <property name="infos" type="string">
+            <column name="infos" />
+        </property>
+        <set name="questions" table="question" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idquestionnaire" not-null="true" />
+            </key>
+            <one-to-many class="org.entitee.Question" />
+        </set>
+    </class>
+</hibernate-mapping>

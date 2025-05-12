@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 26 f?vr. 2025, 12:37:11 by Hibernate Tools 4.3.6.Final -->
+<hibernate-mapping>
+    <class name="org.entitee.Categorieinstitution" table="categorieinstitution" schema="public" optimistic-lock="version">
+        <id name="idcatins" type="int">
+            <column name="idcatins" />
+            <generator class="assigned" />
+        </id>
+        <property name="libelle" type="string">
+            <column name="libelle" length="254" />
+        </property>
+        <property name="code" type="java.lang.Integer">
+            <column name="code" />
+        </property>
+        <property name="datecreation" type="string">
+            <column name="datecreation" length="254" />
+        </property>
+        <property name="nombreelements" type="java.lang.Integer">
+            <column name="nombreelements" />
+        </property>
+        <set name="institutions" table="institution" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idcatins" not-null="true" />
+            </key>
+            <one-to-many class="org.entitee.Institution" />
+        </set>
+    </class>
+</hibernate-mapping>

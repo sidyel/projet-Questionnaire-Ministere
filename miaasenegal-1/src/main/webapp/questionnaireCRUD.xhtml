@@ -1,0 +1,225 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Gestion des Questionnaires</ui:define>
+	<ui:define name="viewname">
+		<li><p:link outcome="/adminPage">Admin</p:link></li>
+		<li><i class="pi pi-chevron-right"></i></li>
+		<li><p:link outcome="/questionnaireCRUD">Questionnaires</p:link></li>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form">
+			<div class="grid crud-demo">
+				<div class="col-12">
+					<div class="card">
+						<p:growl id="messages" showDetail="true" />
+						<!-- Toolbar -->
+						<p:toolbar styleClass="mb-4">
+							<p:toolbarGroup>
+								<p:commandButton value="New" icon="pi pi-plus"
+									actionListener="#{questionnaireBean.openNew}"
+									update="manage-questionnaire-content"
+									oncomplete="PF('manageQuestionnaireDialog').show()"
+									styleClass="ui-button-success" style="margin-right: .5rem" />
+								<p:commandButton id="delete-questionnaires-button"
+									value="#{questionnaireBean.deleteButtonMessage}"
+									icon="pi pi-trash"
+									actionListener="#{questionnaireBean.deleteSelectedQuestionnaires}"
+									styleClass="ui-button-danger" update="@this">
+									<p:confirm header="Confirmation"
+										message="Delete the selected questionnaires?"
+										icon="pi pi-exclamation-triangle" />
+								</p:commandButton>
+							</p:toolbarGroup>
+						</p:toolbar>
+
+						<!-- DataTable -->
+						<p:dataTable id="dt-questionnaires" widgetVar="dtQuestionnaires"
+							var="qnn" value="#{questionnaireBean.questionnaires}"
+							reflow="true" styleClass="products-table"
+							selection="#{questionnaireBean.selectedQuestionnaires}"
+							rowKey="#{qnn.idquestionnaire}" paginator="true" rows="10"
+							rowSelectMode="add" paginatorPosition="bottom">
+
+							<f:facet name="header">
+								<div class="products-table-header">
+									<span style="font-weight: bold">Manage Questionnaires</span> <span
+										class="filter-container ui-input-icon-left"> <i
+										class="pi pi-search"></i> <p:inputText id="globalFilter"
+											onkeyup="PF('dtQuestionnaires').filter()"
+											placeholder="Search" />
+									</span>
+								</div>
+							</f:facet>
+
+							<p:ajax event="rowSelect"
+								update=":form:delete-questionnaires-button" />
+							<p:ajax event="rowUnselect"
+								update=":form:delete-questionnaires-button" />
+							<p:ajax event="rowSelectCheckbox"
+								update=":form:delete-questionnaires-button" />
+							<p:ajax event="rowUnselectCheckbox"
+								update=":form:delete-questionnaires-button" />
+							<p:ajax event="toggleSelect"
+								update=":form:delete-questionnaires-button" />
+
+						
+							<!-- Colonne Libellé avec largeur augmentée -->
+							<p:column headerText="Libellé" sortBy="#{qnn.libelle}"
+								filterBy="#{qnn.libelle}" style="width:15%;">
+								<h:outputText value="#{qnn.libelle}" />
+							</p:column>
+
+							<p:column headerText="Date Création" sortBy="#{qnn.datecreation}"
+								filterBy="#{qnn.datecreation}">
+								<h:outputText value="#{qnn.datecreation}" />
+							</p:column>
+
+							<p:column headerText="Projet" sortBy="#{qnn.projet.libelle}"
+								filterBy="#{qnn.projet.libelle}">
+								<h:outputText value="#{qnn.projet.libelle}" />
+							</p:column>
+
+							<!-- Colonne Etat avec largeur diminuée -->
+							<p:column headerText="etet" sortBy="#{qnn.etat}"
+								filterBy="#{qnn.etat}" style="width:10%;">
+								<h:outputText value="#{qnn.etat}"
+									style="font-weight:bold;font-size:14px;color:#{qnn.etat eq 'active' ? 'green':'red' }" />
+							</p:column>
+
+							<p:column headerText="Gerer les Questions">
+								<p:button value="Gérer Questions" outcome="questionCRUD"
+									style="background:yellow;margin-right:5px;color:black;font-weight:bold;">
+									<f:param name="id" value="#{qnn.idquestionnaire}" />
+								</p:button>
+							</p:column>
+
+							<p:column headerText="Questions" exportable="false">
+								<p:panelGrid columns="1">
+									<p:commandButton value="Changer Etat"
+										action="#{questionnaireBean.changerEtatQuestionnaire(qnn)}"
+										style="background:magenta;margin-right:5px;color:black;"
+										update="form:dt-questionnaires,form:messages" />
+									<p:commandButton value="Evaluation"
+										action="#{questionnaireBean.evaluationQuestionnaire(qnn)}"
+										style="background:cyan;margin-right:5px;color:black;"
+										update="form:dt-questionnaires,form:messages" />
+									<p:commandButton value="jamais repondu"
+										action="#{questionnaireBean.ONjAMMAISrEPONDUQuestionnaire(qnn)}"
+										style="background:cyan;margin-right:5px;color:black;"
+										update="form:dt-questionnaires,form:messages" />
+								</p:panelGrid>
+							</p:column>
+
+							<!-- Actions CRUD -->
+							<p:column headerText="Actions" exportable="false">
+								<p:commandButton icon="pi pi-pencil"
+									update=":form:manage-questionnaire-content"
+									oncomplete="PF('manageQuestionnaireDialog').show()"
+									styleClass="ui-button-success" process="@this">
+									<f:setPropertyActionListener value="#{qnn}"
+										target="#{questionnaireBean.selectedQuestionnaire}" />
+								</p:commandButton>
+								<p:commandButton class="ui-button-warning" icon="pi pi-trash"
+									process="@this"
+									oncomplete="PF('deleteQuestionnaireDialog').show()">
+									<f:setPropertyActionListener value="#{qnn}"
+										target="#{questionnaireBean.selectedQuestionnaire}" />
+								</p:commandButton>
+							</p:column>
+
+						</p:dataTable>
+
+						<!-- Dialog Création/Mise à jour -->
+						<p:dialog header="Questionnaire Details" width="700"
+							showEffect="fade" modal="true"
+							widgetVar="manageQuestionnaireDialog" responsive="true">
+							<p:outputPanel id="manage-questionnaire-content" class="ui-fluid">
+								<p:outputPanel
+									rendered="#{not empty questionnaireBean.selectedQuestionnaire}">
+									<div class="field">
+										<p:outputLabel for="project" value="Projet" />
+										<p:selectOneMenu id="project"
+											value="#{questionnaireBean.idProject}">
+											<f:selectItem itemLabel="Sélectionner un projet" itemValue="" />
+											<f:selectItems value="#{questionnaireBean.projets}"
+												var="proj" itemLabel="#{proj.libelle}"
+												itemValue="#{proj.idprojet}" />
+										</p:selectOneMenu>
+									</div>
+									<!-- Libellé -->
+									<div class="field">
+										<p:outputLabel for="libelle" value="Libellé" />
+										<p:inputText id="libelle"
+											value="#{questionnaireBean.selectedQuestionnaire.libelle}"
+											required="true" />
+									</div>
+									<!-- Objectif -->
+									<div class="field">
+										<p:outputLabel for="objectif" value="Objectif" />
+										<p:inputText id="objectif"
+											value="#{questionnaireBean.selectedQuestionnaire.objectif}" />
+									</div>
+									<!-- Date Début -->
+									<div class="field">
+										<p:outputLabel for="datedebut" value="Date Début" />
+										<p:inputText id="datedebut"
+											value="#{questionnaireBean.selectedQuestionnaire.datedebut}" />
+									</div>
+									<!-- Date Fin -->
+									<div class="field">
+										<p:outputLabel for="datefin" value="Date Fin" />
+										<p:inputText id="datefin"
+											value="#{questionnaireBean.selectedQuestionnaire.datefin}" />
+									</div>
+									<!-- Infos -->
+									<div class="field">
+										<p:outputLabel for="infos" value="Infos" />
+										<p:inputTextarea id="infos"
+											value="#{questionnaireBean.selectedQuestionnaire.infos}"
+											rows="3" cols="50" />
+									</div>
+								</p:outputPanel>
+							</p:outputPanel>
+							<f:facet name="footer">
+								<p:commandButton value="Save" icon="pi pi-check"
+									actionListener="#{questionnaireBean.saveQuestionnaire}"
+									update="manage-questionnaire-content"
+									process="manage-questionnaire-content @this" />
+								<p:commandButton value="Cancel" icon="pi pi-times"
+									onclick="PF('manageQuestionnaireDialog').hide()"
+									class="ui-button-secondary" />
+							</f:facet>
+						</p:dialog>
+
+						<!-- Confirm Dialog pour suppression d'un questionnaire -->
+						<p:confirmDialog widgetVar="deleteQuestionnaireDialog"
+							showEffect="fade" width="300" message="Delete the questionnaire?"
+							header="Confirm" severity="warn">
+							<p:commandButton value="Yes" icon="pi pi-check"
+								actionListener="#{questionnaireBean.deleteQuestionnaire}"
+								process="@this"
+								oncomplete="PF('deleteQuestionnaireDialog').hide()" />
+							<p:commandButton value="No" type="button"
+								styleClass="ui-button-secondary" icon="pi pi-times"
+								onclick="PF('deleteQuestionnaireDialog').hide()" />
+						</p:confirmDialog>
+
+						<p:confirmDialog global="true" showEffect="fade" width="300">
+							<p:commandButton value="Yes" type="button"
+								styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+							<p:commandButton value="No" type="button"
+								styleClass="ui-confirmdialog-no ui-button-secondary"
+								icon="pi pi-times" />
+						</p:confirmDialog>
+
+					</div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

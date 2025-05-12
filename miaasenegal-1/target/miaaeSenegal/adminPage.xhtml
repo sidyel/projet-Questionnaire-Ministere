@@ -1,0 +1,64 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Administration</ui:define>
+
+    <ui:define name="viewname">
+        <li>Administration</li>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form>
+            <!-- Container principal avec PrimeFlex -->
+            <div class="grid p-3">
+                <div class="col-12">
+                    <h2 style="text-align:center;">Paramétrage de l'application</h2>
+                </div>
+                
+               
+                <!-- Panneau pour la gestion des questionnaires -->
+                <div class="col-12 md:col-6">
+                    <p:panel header="Projet" styleClass="shadow-2 border-round p-3" style="text-align:center;">
+                        <p:button value="Gérer Les Projet" outcome="projetCRUD.xhtml" style="margin-top:1em;" />
+                    </p:panel>
+                </div>
+
+                <!-- Panneau pour la gestion des réponses possibles -->
+                <div class="col-12 md:col-6">
+                    <p:panel header=" Questions" styleClass="shadow-2 border-round p-3" style="text-align:center;">
+                        <p:button value="Gérer Question" outcome="questionnaireCRUD.xhtml" style="margin-top:1em;" />
+                    </p:panel>
+                </div>
+                
+                <div class="col-12 md:col-6">
+                    <p:panel header="profil" styleClass="shadow-2 border-round p-3" style="text-align:center;">
+                        <p:button value="Gérer Les Profil" outcome="profileCRUD.xhtml" style="margin-top:1em;" />
+                    </p:panel>
+                </div>
+                
+                <div class="col-12 md:col-6">
+                    <p:panel header="permission" styleClass="shadow-2 border-round p-3" style="text-align:center;">
+                        <p:button value="Gérer Les Permissions" outcome="employeePermissionCRUD.xhtml" style="margin-top:1em;" />
+                    </p:panel>
+                </div>
+
+                <!-- Panneau pour la gestion des réponses possibles -->
+                <div class="col-12 md:col-6">
+                    <p:panel header=" Employes" styleClass="shadow-2 border-round p-3" style="text-align:center;">
+                        <p:button value="Gérer Employe" outcome="employeCRUD.xhtml" style="margin-top:1em;" />
+                    </p:panel>
+                </div>
+                
+                <div class="col-12 md:col-6">
+                    <p:panel header="Reponse" styleClass="shadow-2 border-round p-3" style="text-align:center;">
+                        <p:button value="Gérer Les Reponse Des Questionnaire" outcome="gestionReponseUtilisateur.xhtml" style="margin-top:1em;" />
+                    </p:panel>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,136 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templateNonMenu.xhtml">
+
+	<ui:define name="title">Administration</ui:define>
+
+	<ui:define name="viewname">
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form">
+			<p:growl id="messages" showDetail="true" life="3000" />
+
+			
+
+			
+					<!-- Votre formulaire ici -->
+					<p:panel header="Formulaire d'inscription Employé"
+						styleClass="shadow-2 border-round p-4">
+						<div class="card ui-fluid">
+							<div class="ui-fluid formgrid grid">
+								<!-- Sélection de l'institution -->
+								<div class="field col-12 lg:col-6">
+									<p:outputLabel for="division" value="Division" />
+									<p:selectOneMenu id="division"
+										value="#{employeView.idDivision}" required="true">
+										<f:selectItem itemLabel="Sélectionner une Division"
+											itemValue="" />
+										<f:selectItems value="#{employeView.divisions}" var="inst"
+											itemLabel="#{inst.libelle}" itemValue="#{inst.iddivision}" />
+									</p:selectOneMenu>
+								</div>
+								<div class="field col-12 lg:col-6">
+											<p:outputLabel for="institution" value="Institution" />
+											<p:selectOneMenu id="institution"
+												value="#{employeView.institution}">
+												<f:selectItem itemLabel="Sélectionner une institution"
+													itemValue="" />
+												<f:selectItems value="#{employeView.institutions}"
+													var="inst" itemLabel="#{inst.libelle}"
+													itemValue="#{inst.idins}" />
+												<!-- Lancer un Ajax pour mettre à jour la liste des divisions -->
+												<p:ajax update="division" />
+											</p:selectOneMenu>
+										</div>
+
+								<!-- Informations Personnelles -->
+								<div class="field col-12 sm:col-6">
+									<p:outputLabel for="nom" value="Nom" />
+									<p:inputText id="nom"
+										value="#{employeView.selectedEmploye.personne.nom}"
+										required="true" />
+								</div>
+								<div class="field col-12 sm:col-6">
+									<p:outputLabel for="prenom" value="Prénom" />
+									<p:inputText id="prenom"
+										value="#{employeView.selectedEmploye.personne.prenom}"
+										required="true" />
+								</div>
+
+								<!-- Informations Employé -->
+								<div class="field col-12 sm:col-6 lg:col-4">
+									<p:outputLabel for="matricule" value="Matricule" />
+									<p:inputText id="matricule"
+										value="#{employeView.selectedEmploye.matricule}" />
+								</div>
+								<div class="field col-12 sm:col-6 lg:col-4">
+									<p:outputLabel for="codesecret" value="Code Secret" />
+									<p:inputNumber id="codesecret"
+										value="#{employeView.selectedEmploye.codesecret}" />
+								</div>
+
+								<!-- Champs additionnels -->
+								<div class="field col-12 sm:col-6 lg:col-4">
+									<p:outputLabel for="datenaiss" value="Date de Naissance" />
+									<p:calendar id="datenaiss"
+										value="#{employeView.selectedEmploye.personne.datenaiss}"
+										pattern="dd/MM/yyyy" />
+								</div>
+								<div class="field col-12 sm:col-6">
+									<p:outputLabel for="lieunaiss" value="Lieu de Naissance" />
+									<p:inputText id="lieunaiss"
+										value="#{employeView.selectedEmploye.personne.lieunaiss}" />
+								</div>
+								<div class="field col-12 sm:col-6">
+									<p:outputLabel for="cin" value="CIN" />
+									<p:inputText id="cin"
+										value="#{employeView.selectedEmploye.personne.cin}" />
+								</div>
+								<div class="field col-12 sm:col-6">
+									<p:outputLabel for="login" value="Login" />
+									<p:inputText id="login"
+										value="#{employeView.selectedEmploye.personne.login}" />
+								</div>
+								<div class="field col-12 sm:col-6">
+									<p:outputLabel for="motpasse" value="Mot de Passe" />
+									<p:password id="motpasse"
+										value="#{employeView.selectedEmploye.personne.motpasse}"
+										feedback="true" />
+								</div>
+
+								<!-- Contact -->
+								<div class="field col-12 sm:col-6 lg:col-4">
+									<p:outputLabel for="telephone1" value="Téléphone 1" />
+									<p:inputMask id="telephone1"
+										value="#{employeView.selectedEmploye.personne.telephone1}"
+										mask="99-999-99-99" />
+								</div>
+								<div class="field col-12 sm:col-6 lg:col-4">
+									<p:outputLabel for="telephone2" value="Téléphone 2" />
+									<p:inputMask id="telephone2"
+										value="#{employeView.selectedEmploye.personne.telephone2}"
+										mask="99-999-99-99" />
+								</div>
+								<div class="field col-12 sm:col-6 lg:col-4">
+									<p:outputLabel for="email1" value="Email 1" />
+									<p:inputText id="email1"
+										value="#{employeView.selectedEmploye.personne.email1}" />
+								</div>
+							</div>
+
+							<p:commandButton value="Enregistrer"
+								actionListener="#{employeView.saveEmploye}" icon="pi pi-check" />
+						</div>
+					</p:panel>
+				
+
+
+			<!-- Panel du formulaire d'inscription, affiché uniquement si le numéro est validé -->
+
+		</h:form>
+	</ui:define>
+</ui:composition>

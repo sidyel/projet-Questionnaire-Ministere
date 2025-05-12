@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 26 f?vr. 2025, 12:37:11 by Hibernate Tools 4.3.6.Final -->
+<hibernate-mapping>
+    <class name="org.entitee.Personne" table="personne" schema="public" optimistic-lock="version">
+        <id name="idpersonne" type="int">
+            <column name="idpersonne" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="profile" class="org.entitee.Profile" fetch="select">
+            <column name="idprofile" not-null="true" />
+        </many-to-one>
+        <property name="nom" type="string">
+            <column name="nom" length="254" />
+        </property>
+        <property name="prenom" type="string">
+            <column name="prenom" length="254" />
+        </property>
+        <property name="datenaiss" type="string">
+            <column name="datenaiss" length="254" />
+        </property>
+        <property name="lieunaiss" type="string">
+            <column name="lieunaiss" length="254" />
+        </property>
+        <property name="cin" type="string">
+            <column name="cin" length="254" />
+        </property>
+        <property name="login" type="string">
+            <column name="login" length="254" />
+        </property>
+        <property name="motpasse" type="string">
+            <column name="motpasse" length="254" />
+        </property>
+        <property name="telephone1" type="java.lang.Integer">
+            <column name="telephone1" />
+        </property>
+        <property name="telephone2" type="java.lang.Integer">
+            <column name="telephone2" />
+        </property>
+        <property name="telephone3" type="java.lang.Integer">
+            <column name="telephone3" />
+        </property>
+        <property name="email1" type="string">
+            <column name="email1" length="254" />
+        </property>
+        <property name="email2" type="string">
+            <column name="email2" length="254" />
+        </property>
+        <property name="email3" type="string">
+            <column name="email3" length="254" />
+        </property>
+        <property name="codesecret" type="java.lang.Integer">
+            <column name="codesecret" />
+        </property>
+        <property name="etat" type="string">
+            <column name="etat" length="254" />
+        </property>
+        <property name="bloque" type="string">
+            <column name="bloque" length="254" />
+        </property>
+        <set name="rolepermissions" table="rolepermission" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idpersonne" not-null="true" />
+            </key>
+            <one-to-many class="org.entitee.Rolepermission" />
+        </set>
+        <set name="employes" table="employe" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idpersonne" not-null="true" />
+            </key>
+            <one-to-many class="org.entitee.Employe" />
+        </set>
+    </class>
+</hibernate-mapping>

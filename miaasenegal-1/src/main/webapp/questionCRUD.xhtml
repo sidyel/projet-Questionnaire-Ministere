@@ -1,0 +1,192 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Gestion des Questions</ui:define>
+	<ui:define name="viewname">
+		<li><p:link outcome="/adminPage">Admin</p:link></li>
+		<li><i class="pi pi-chevron-right"></i></li>
+		<li><p:link outcome="/questionnaireCRUD">questionnaire</p:link></li>
+		<li><i class="pi pi-chevron-right"></i></li>
+		<li><p:link outcome="/questionCRUD">Questions</p:link></li>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form">
+			<div class="grid crud-demo">
+				<div class="col-12">
+					<div class="card">
+						<p:growl id="messages" showDetail="true" />
+						<h3>Questions pour le Questionnaire ID:
+							#{questionBean.questionnaireId}</h3>
+
+						<!-- Toolbar -->
+						<p:toolbar styleClass="mb-4">
+							<p:toolbarGroup>
+								<p:commandButton value="New" icon="pi pi-plus"
+									actionListener="#{questionBean.openNew}"
+									update="manage-question-content"
+									oncomplete="PF('manageQuestionDialog').show()"
+									styleClass="ui-button-success" style="margin-right: .5rem" />
+								<p:commandButton id="delete-questions-button"
+									value="#{questionBean.deleteButtonMessage}" icon="pi pi-trash"
+									actionListener="#{questionBean.deleteSelectedQuestions}"
+									styleClass="ui-button-danger"
+									disabled="#{!questionBean.hasSelectedQuestions}" update="@this">
+									<p:confirm header="Confirmation"
+										message="Delete the selected questions?"
+										icon="pi pi-exclamation-triangle" />
+								</p:commandButton>
+							</p:toolbarGroup>
+							<p:toolbarGroup>
+								<p:fileUpload mode="simple" skinSimple="true" label="Import"
+									chooseIcon="pi pi-download" />
+								<p:commandButton value="Export" icon="pi pi-upload"
+									styleClass="ui-button-help" ajax="false">
+									<p:dataExporter type="pdf" target="dt-questions"
+										fileName="questions" />
+								</p:commandButton>
+							</p:toolbarGroup>
+						</p:toolbar>
+
+						<!-- DataTable -->
+						<p:dataTable id="dt-questions" widgetVar="dtQuestions" var="qst"
+							value="#{questionBean.questions}" reflow="true"
+							styleClass="products-table"
+							selection="#{questionBean.selectedQuestions}"
+							rowKey="#{qst.idquestion}" paginator="true" rows="10"
+							rowSelectMode="add" paginatorPosition="bottom">
+							<f:facet name="header">
+								<div class="products-table-header">
+									<span style="font-weight: bold">Manage Questions</span> <span
+										class="filter-container ui-input-icon-left"> <i
+										class="pi pi-search"></i> <p:inputText id="globalFilter"
+											onkeyup="PF('dtQuestions').filter()" placeholder="Search" />
+									</span>
+								</div>
+							</f:facet>
+							<p:ajax event="rowSelect" update=":form:delete-questions-button" />
+							<p:ajax event="rowUnselect"
+								update=":form:delete-questions-button" />
+							<p:ajax event="rowSelectCheckbox"
+								update=":form:delete-questions-button" />
+							<p:ajax event="rowUnselectCheckbox"
+								update=":form:delete-questions-button" />
+							<p:ajax event="toggleSelect"
+								update=":form:delete-questions-button" />
+
+							<!-- Colonne de sélection -->
+							<p:column selectionMode="multiple" exportable="false" />
+							<!-- Colonnes d'information -->
+							<p:column headerText="ID" sortBy="#{qst.idquestion}"
+								filterBy="#{qst.idquestion}">
+								<h:outputText value="#{qst.idquestion}" />
+							</p:column>
+							<p:column headerText="Libellé" sortBy="#{qst.libelle}"
+								filterBy="#{qst.libelle}">
+								<h:outputText value="#{qst.libelle}" />
+							</p:column>
+							<p:column headerText="Numéro Ordre" sortBy="#{qst.numeroordre}"
+								filterBy="#{qst.numeroordre}">
+								<h:outputText value="#{qst.numeroordre}" />
+							</p:column>
+							<p:column headerText="items Questions" exportable="false">
+								
+								<p:button value="Gérer les items Questions"
+									outcome="itemQuestionCRUD" icon="pi pi-list"
+									style="margin-right:5px;color:black;font-weight:bold;">
+									<f:param name="id" value="#{qst.idquestion}" />
+								</p:button>
+							</p:column>
+
+							<!-- Actions CRUD -->
+							<!-- Colonne Actions dans la dataTable de questionCRUD.xhtml -->
+							<p:column headerText="Actions" exportable="false">
+								<p:commandButton icon="pi pi-pencil"
+									update=":form:manage-question-content"
+									oncomplete="PF('manageQuestionDialog').show()"
+									styleClass="ui-button-success" process="@this">
+									<f:setPropertyActionListener value="#{qst}"
+										target="#{questionBean.selectedQuestion}" />
+								</p:commandButton>
+								<p:commandButton class="ui-button-warning" icon="pi pi-trash"
+									process="@this" oncomplete="PF('deleteQuestionDialog').show()">
+									<f:setPropertyActionListener value="#{qst}"
+										target="#{questionBean.selectedQuestion}" />
+								</p:commandButton>
+
+							</p:column>
+
+						</p:dataTable>
+
+						<!-- Dialog Création/Mise à jour -->
+						<p:dialog header="Question Details" width="600" showEffect="fade"
+							modal="true" widgetVar="manageQuestionDialog" responsive="true">
+							<p:outputPanel id="manage-question-content" class="ui-fluid">
+								<p:outputPanel
+									rendered="#{not empty questionBean.selectedQuestion}">
+									<div class="field">
+										<p:outputLabel for="libelle" value="Libellé" />
+										<p:inputText id="libelle"
+											value="#{questionBean.selectedQuestion.libelle}"
+											required="true" />
+									</div>
+									<div class="field">
+										<p:outputLabel for="code" value="Code" />
+										<p:inputText id="code"
+											value="#{questionBean.selectedQuestion.code}" />
+									</div>
+
+									<div class="field">
+										<p:outputLabel for="optionel" value="Optionnel" />
+										<p:inputText id="optionel"
+											value="#{questionBean.selectedQuestion.optionel}" />
+									</div>
+									<div class="field">
+										<p:outputLabel for="autoriseremarque" value="Autoriser Marque" />
+										<p:inputText id="autoriseremarque"
+											value="#{questionBean.selectedQuestion.autoriseremarque}" />
+									</div>
+								</p:outputPanel>
+							</p:outputPanel>
+							<f:facet name="footer">
+								<p:commandButton value="Save" icon="pi pi-check"
+									actionListener="#{questionBean.saveQuestion}"
+									update="manage-question-content"
+									process="manage-question-content @this" />
+								<p:commandButton value="Cancel" icon="pi pi-times"
+									onclick="PF('manageQuestionDialog').hide()"
+									class="ui-button-secondary" />
+							</f:facet>
+
+						</p:dialog>
+
+
+						<!-- Confirm Dialog pour suppression d'une question -->
+						<p:confirmDialog widgetVar="deleteQuestionDialog"
+							showEffect="fade" width="300" message="Delete the question?"
+							header="Confirm" severity="warn">
+							<p:commandButton value="Yes" icon="pi pi-check"
+								actionListener="#{questionBean.deleteQuestion}" process="@this"
+								oncomplete="PF('deleteQuestionDialog').hide()" />
+							<p:commandButton value="No" type="button"
+								styleClass="ui-button-secondary" icon="pi pi-times"
+								onclick="PF('deleteQuestionDialog').hide()" />
+						</p:confirmDialog>
+
+						<p:confirmDialog global="true" showEffect="fade" width="300">
+							<p:commandButton value="Yes" type="button"
+								styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+							<p:commandButton value="No" type="button"
+								styleClass="ui-confirmdialog-no ui-button-secondary"
+								icon="pi pi-times" />
+						</p:confirmDialog>
+
+					</div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

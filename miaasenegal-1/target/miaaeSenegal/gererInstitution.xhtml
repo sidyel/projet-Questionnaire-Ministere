@@ -1,0 +1,156 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Gestion des Institutions</ui:define>
+    <ui:define name="viewname">
+        <li><p:link outcome="/adminPage">Admin</p:link></li>
+        <li><i class="pi pi-chevron-right"></i></li>
+        <li><p:link outcome="/gererInstitution">Institutions</p:link></li>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <div class="grid crud-demo">
+                <div class="col-12">
+                    <div class="card">
+                        <p:growl id="messages" showDetail="true" />
+                        <h3>Institutions pour la Catégorie ID: #{instituBean.categorieId}</h3>
+                        
+                        <!-- Toolbar -->
+                        <p:toolbar styleClass="mb-4">
+                            <p:toolbarGroup>
+                                <p:commandButton value="New" icon="pi pi-plus"
+                                    actionListener="#{instituBean.openNew}"
+                                    update="manage-inst-content"
+                                    oncomplete="PF('manageInstDialog').show()"
+                                    styleClass="ui-button-success" style="margin-right: .5rem" />
+                                <p:commandButton id="delete-inst-button"
+                                    value="#{instituBean.deleteButtonMessage}" icon="pi pi-trash"
+                                    actionListener="#{instituBean.deleteSelectedInstitutions}"
+                                    styleClass="ui-button-danger" update="@this">
+                                    <p:confirm header="Confirmation"
+                                        message="Supprimer les institutions sélectionnées?"
+                                        icon="pi pi-exclamation-triangle" />
+                                </p:commandButton>
+                            </p:toolbarGroup>
+                           
+                        </p:toolbar>
+                        
+                        <!-- DataTable -->
+                        <p:dataTable id="dt-institutions" widgetVar="dtInstitutions"
+                            var="inst" value="#{instituBean.institutions}"
+                            reflow="true" styleClass="products-table"
+                            selection="#{instituBean.selectedInstitutions}"
+                            rowKey="#{inst.idins}" paginator="true" rows="10"
+                            rowSelectMode="add" paginatorPosition="bottom">
+                            <f:facet name="header">
+                                <div class="products-table-header">
+                                    <span style="font-weight: bold">Gérer les Institutions</span>
+                                    <span class="filter-container ui-input-icon-left">
+                                        <i class="pi pi-search"></i>
+                                        <p:inputText id="globalFilter" onkeyup="PF('dtInstitutions').filter()" placeholder="Search" />
+                                    </span>
+                                </div>
+                            </f:facet>
+                            <p:ajax event="rowSelect" update=":form:delete-inst-button" />
+                            <p:ajax event="rowUnselect" update=":form:delete-inst-button" />
+                            <p:ajax event="rowSelectCheckbox" update=":form:delete-inst-button" />
+                            <p:ajax event="rowUnselectCheckbox" update=":form:delete-inst-button" />
+                            <p:ajax event="toggleSelect" update=":form:delete-inst-button" />
+
+                            <!-- Colonne de sélection -->
+                            <p:column selectionMode="multiple" exportable="false" />
+
+                            <!-- Colonnes d'information -->
+                            <p:column headerText="ID" sortBy="#{inst.idins}" filterBy="#{inst.idins}">
+                                <h:outputText value="#{inst.idins}" />
+                            </p:column>
+                            <p:column headerText="Libellé" sortBy="#{inst.libelle}" filterBy="#{inst.libelle}">
+                                <h:outputText value="#{inst.libelle}" />
+                            </p:column>
+                            <p:column headerText="Code" sortBy="#{inst.code}" filterBy="#{inst.code}">
+                                <h:outputText value="#{inst.code}" />
+                            </p:column>
+                            <p:column headerText="Date Création" sortBy="#{inst.datecreation}" filterBy="#{inst.datecreation}">
+                                <h:outputText value="#{inst.datecreation}" />
+                            </p:column>
+                            <p:column headerText="Nb. Membres" sortBy="#{inst.nombremembres}" filterBy="#{inst.nombremembres}">
+                                <h:outputText value="#{inst.nombremembres}" />
+                            </p:column>
+                            <p:column headerText="État" sortBy="#{inst.etat}" filterBy="#{inst.etat}">
+                                <h:outputText value="#{inst.etat}" />
+                            </p:column>
+
+                            <!-- Actions CRUD -->
+                            <p:column headerText="Actions" exportable="false">
+                                <p:commandButton icon="pi pi-pencil"
+                                    update=":form:manage-inst-content"
+                                    oncomplete="PF('manageInstDialog').show()"
+                                    styleClass="ui-button-success" process="@this">
+                                    <f:setPropertyActionListener value="#{inst}" target="#{instituBean.selectedInstitution}" />
+                                </p:commandButton>
+                                <p:commandButton class="ui-button-warning" icon="pi pi-trash"
+                                    process="@this" oncomplete="PF('deleteInstDialog').show()">
+                                    <f:setPropertyActionListener value="#{inst}" target="#{instituBean.selectedInstitution}" />
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                        
+                        <!-- Dialog Création/Mise à jour -->
+                        <p:dialog header="Détails Institution" width="600" showEffect="fade"
+                            modal="true" widgetVar="manageInstDialog" responsive="true">
+                            <p:outputPanel id="manage-inst-content" class="ui-fluid">
+                                <p:outputPanel rendered="#{not empty instituBean.selectedInstitution}">
+                                    <div class="field">
+                                        <p:outputLabel for="libelle" value="Libellé" />
+                                        <p:inputText id="libelle" value="#{instituBean.selectedInstitution.libelle}" required="true" />
+                                    </div>
+                                    <div class="field">
+                                        <p:outputLabel for="code" value="Code" />
+                                        <p:inputText id="code" value="#{instituBean.selectedInstitution.code}" />
+                                    </div>
+                               
+                                    <div class="field">
+                                        <p:outputLabel for="etat" value="État" />
+                                        <p:inputText id="etat" value="#{instituBean.selectedInstitution.etat}" />
+                                    </div>
+                                </p:outputPanel>
+                            </p:outputPanel>
+                            <f:facet name="footer">
+                                <p:commandButton value="Save" icon="pi pi-check"
+                                    actionListener="#{instituBean.saveInstitution}"
+                                    update="manage-inst-content"
+                                    process="manage-inst-content @this" />
+                                <p:commandButton value="Cancel" icon="pi pi-times"
+                                    onclick="PF('manageInstDialog').hide()"
+                                    class="ui-button-secondary" />
+                            </f:facet>
+                        </p:dialog>
+                        
+                        <!-- Confirm Dialog pour suppression d'une institution -->
+                        <p:confirmDialog widgetVar="deleteInstDialog" showEffect="fade" width="300"
+                            message="Supprimer cette institution ?" header="Confirmer" severity="warn">
+                            <p:commandButton value="Yes" icon="pi pi-check"
+                                actionListener="#{instituBean.deleteInstitution}"
+                                process="@this" oncomplete="PF('deleteInstDialog').hide()" />
+                            <p:commandButton value="No" type="button"
+                                styleClass="ui-button-secondary" icon="pi pi-times"
+                                onclick="PF('deleteInstDialog').hide()" />
+                        </p:confirmDialog>
+                        
+                        <p:confirmDialog global="true" showEffect="fade" width="300">
+                            <p:commandButton value="Yes" type="button"
+                                styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                            <p:commandButton value="No" type="button"
+                                styleClass="ui-confirmdialog-no ui-button-secondary" icon="pi pi-times" />
+                        </p:confirmDialog>
+
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

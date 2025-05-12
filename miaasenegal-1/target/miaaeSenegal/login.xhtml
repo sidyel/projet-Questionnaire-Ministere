@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>PrimeFaces Poseidon</title>
+    </h:head>
+
+    <h:body styleClass="login-body #{guestPreferences.inputStyleClass}">
+        <div class="login-wrapper">
+            <div class="login-panel">
+                <h:link outcome="/login" styleClass="logo">
+                    <p:graphicImage name="images/drapeauSenegal.png" library="poseidon-layout" />
+                </h:link>
+
+                <div class="senegal-text" style="text-align:center; margin: 10px 0;">
+                    <h3>République du Sénégal</h3>
+                    <p>
+                        Un peuple, un but, une foi<br/>
+                        Ministère de l'Intégration Africaine et des Affaires étrangères
+                    </p>
+                </div>
+                <h:form>
+				<p:outputLabel value="Sélectionner la langue : " />
+
+				<p:selectOneMenu value="#{languageBean.language}"
+					onchange="submit()" label="Select Language">
+					<!-- Option pour l'anglais -->
+					<f:selectItem itemValue="en" itemLabel="English">
+						<h:graphicImage name="resources/images/eng.jpeg" alt="English"
+							style="width: 20px; height: 20px; margin-right: 10px;" />
+					</f:selectItem>
+
+					<!-- Option pour le français -->
+					<f:selectItem itemValue="fr" itemLabel="Français">
+						<h:graphicImage
+							name="resources/poseidon-layout/images/france.jpeg"
+							alt="Français"
+							style="width: 20px; height: 20px; margin-right: 10px;" />
+					</f:selectItem>
+				</p:selectOneMenu>
+			</h:form>
+
+                <!-- ✅ Ajout du formulaire JSF -->
+                <h:form>
+                    <div class="login-form">
+                        <h2>#{msg['login.header']}</h2>
+                        <p>
+						#{msg['login.message']} 
+					</p>
+                        <p>Vous n'avez pas de compte ? <a href="inscriptionEmploye.xhtml">Inscrivez-vous</a></p>
+
+                        <p:inputText id="email" placeholder="Adresse e-mail" value="#{homeView.employe.personne.login}" required="true"/>
+                        <p:password id="password" placeholder="Mot de passe" value="#{homeView.employe.personne.motpasse}" required="true"/>
+
+                        <!-- ✅ Correction du bouton -->
+                        <p:commandButton value="CONNEXION" action="#{homeView.connexion}" ajax="false" />
+                    </div>
+                </h:form>
+
+                <p>mots de passe Oublier ? <a href="motDePasseOublier.xhtml">Cliquez ici</a> pour le reinitialiser.</p>
+            </div>
+        </div>
+
+        <h:outputStylesheet name="css/layout-light.css" library="poseidon-layout" />
+        <h:outputStylesheet name="css/primeicons.css" library="poseidon-layout" />
+    </h:body>
+
+</html>

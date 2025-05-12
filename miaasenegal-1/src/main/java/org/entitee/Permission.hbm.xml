@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 26 f?vr. 2025, 12:37:11 by Hibernate Tools 4.3.6.Final -->
+<hibernate-mapping>
+    <class name="org.entitee.Permission" table="permission" schema="public" optimistic-lock="version">
+        <id name="idpermission" type="int">
+            <column name="idpermission" />
+            <generator class="assigned" />
+        </id>
+        <property name="permission" type="string">
+            <column name="permission" length="254" />
+        </property>
+        <property name="code" type="java.lang.Integer">
+            <column name="code" />
+        </property>
+        <property name="datecreation" type="string">
+            <column name="datecreation" length="254" />
+        </property>
+        <property name="etat" type="string">
+            <column name="etat" length="254" />
+        </property>
+        <set name="rolepermissions" table="rolepermission" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idpermission" not-null="true" />
+            </key>
+            <one-to-many class="org.entitee.Rolepermission" />
+        </set>
+    </class>
+</hibernate-mapping>

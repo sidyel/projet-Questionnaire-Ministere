@@ -1,0 +1,48 @@
+.layout-topbar{
+    .layout-topbar-wrapper {
+        .layout-topbar-right {
+            .layout-topbar-actions {
+                > li {
+                    &.notifications, &.settings {
+                        > ul {
+                            > li {
+                                &:nth-child(2){
+                                    > a{
+                                        > i {
+                                            background-color: rgba(#2f8ee5,0.2) ;
+                                            color: #2f8ee5;
+                                        }
+                                    }
+                                }
+                                &:nth-child(3){
+                                    > a{
+                                        > i {
+                                            background-color: rgba(#02acac,0.2) ;
+                                            color: #02acac;
+                                        }
+                                    }
+                                }
+                                &:nth-child(4){
+                                    > a{
+                                        > i {
+                                            background-color: rgba(#f16383,0.2) ;
+                                            color: #f16383;
+                                        }
+                                    }
+                                }
+                                &:nth-child(5){
+                                    > a{
+                                        > i {
+                                            background-color: rgba(#2f8ee5,0.2) ;
+                                            color: #2f8ee5;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

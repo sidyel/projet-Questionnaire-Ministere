@@ -1,0 +1,155 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Gestion Profil</ui:define>
+
+    <ui:define name="viewname">
+        <li><p:link outcome="/adminPage">Admin</p:link></li>
+        <li><i class="pi pi-chevron-right"></i></li>
+        <li>
+            <p:link outcome="/profileCRUD">Profil</p:link>
+        </li>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <div class="grid crud-demo">
+                <div class="col-12">
+                    <div class="card">
+                        <p:growl id="messages" showDetail="true" />
+
+                        <p:toolbar styleClass="mb-4">
+                            <p:toolbarGroup>
+                                <p:commandButton value="New" icon="pi pi-plus" 
+                                    actionListener="#{profileView.openNew}" 
+                                    update="manage-profile-content" 
+                                    oncomplete="PF('manageProfileDialog').show()" 
+                                    styleClass="ui-button-success" style="margin-right: .5rem" />
+                                <p:commandButton id="delete-profile-button" 
+                                    icon="pi pi-trash" 
+                                    actionListener="#{profileView.deleteSelectedProfiles}" 
+                                    styleClass="ui-button-danger" 
+                                   
+                                    update="@this">
+                                    <p:confirm header="Confirmation" message="Delete the selected profiles?" icon="pi pi-exclamation-triangle" />
+                                </p:commandButton>
+<!--                                  disabled="#{!profileView.hasSelectedProfiles()}" 
+ -->                            </p:toolbarGroup>
+                            
+                        </p:toolbar>
+
+                        <p:dataTable id="dt-profile" widgetVar="dtProfile" var="prof" 
+                                     value="#{profileView.profiles}" 
+                                     reflow="true" styleClass="products-table"
+                                     selection="#{profileView.selectedProfiles}" 
+                                     rowKey="#{prof.idprofile}" paginator="true" rows="10" 
+                                     rowSelectMode="add" paginatorPosition="bottom">
+                            <f:facet name="header">
+                                <div class="products-table-header">
+                                    <span style="font-weight: bold">Manage Profils</span>
+                                    <span class="filter-container ui-input-icon-left">
+                                        <i class="pi pi-search"></i>
+                                        <p:inputText id="globalFilter" onkeyup="PF('dtProfile').filter()" placeholder="Search" />
+                                    </span>
+                                </div>
+                            </f:facet>
+
+                            <p:ajax event="rowSelect" update=":form:delete-profile-button" />
+                            <p:ajax event="rowUnselect" update=":form:delete-profile-button" />
+                            <p:ajax event="rowSelectCheckbox" update=":form:delete-profile-button" />
+                            <p:ajax event="rowUnselectCheckbox" update=":form:delete-profile-button" />
+                            <p:ajax event="toggleSelect" update=":form:delete-profile-button" />
+
+                            <!-- Colonne de sélection -->
+                            <p:column selectionMode="multiple" exportable="false" />
+
+                            <!-- Colonnes d'affichage -->
+                            <p:column headerText="ID" sortBy="#{prof.idprofile}" filterBy="#{prof.idprofile}">
+                                <h:outputText value="#{prof.idprofile}" />
+                            </p:column>
+                            <p:column headerText="Libellé" sortBy="#{prof.libelle}" filterBy="#{prof.libelle}">
+                                <h:outputText value="#{prof.libelle}" />
+                            </p:column>
+                            <p:column headerText="Code" sortBy="#{prof.code}" filterBy="#{prof.code}">
+                                <h:outputText value="#{prof.code}" />
+                            </p:column>
+                            <p:column headerText="Date Création" sortBy="#{prof.datecreation}" filterBy="#{prof.datecreation}">
+                                <h:outputText value="#{prof.datecreation}" />
+                            </p:column>
+                            <p:column headerText="Nombre Individus" sortBy="#{prof.nombreindividus}" filterBy="#{prof.nombreindividus}">
+                                <h:outputText value="#{prof.nombreindividus}" />
+                            </p:column>
+                            <p:column headerText="État" sortBy="#{prof.etat}" filterBy="#{prof.etat}">
+                                <h:outputText value="#{prof.etat}" />
+                            </p:column>
+
+                            <!-- Actions d'édition et de suppression -->
+                            <p:column exportable="false">
+                                <p:commandButton icon="pi pi-pencil" 
+                                    update=":form:manage-profile-content" 
+                                    oncomplete="PF('manageProfileDialog').show()" 
+                                    styleClass="edit-button rounded-button ui-button-success" process="@this">
+                                    <f:setPropertyActionListener value="#{prof}" target="#{profileView.selectedProfile}" />
+                                </p:commandButton>
+                                <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash" 
+                                    process="@this" oncomplete="PF('deleteProfileDialog').show()">
+                                    <f:setPropertyActionListener value="#{prof}" target="#{profileView.selectedProfile}" />
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+
+                        <!-- Dialog de création/édition -->
+                        <p:dialog header="Détails Profil" showEffect="fade" modal="true" widgetVar="manageProfileDialog" responsive="true">
+                            <p:outputPanel id="manage-profile-content" class="ui-fluid">
+                                <p:outputPanel rendered="#{not empty profileView.selectedProfile}">
+                                    <div class="field">
+                                        <p:outputLabel for="libelle">Libellé</p:outputLabel>
+                                        <p:inputText id="libelle" value="#{profileView.selectedProfile.libelle}" required="true" />
+                                    </div>
+                                    <div class="field">
+                                        <p:outputLabel for="code">Code</p:outputLabel>
+                                        <p:inputText id="code" value="#{profileView.selectedProfile.code}" />
+                                    </div>
+                                    
+                             
+                                    <div class="field">
+                                        <p:outputLabel for="etat">État</p:outputLabel>
+                                        <p:inputText id="etat" value="#{profileView.selectedProfile.etat}" />
+                                    </div>
+                                </p:outputPanel>
+                            </p:outputPanel>
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Save" icon="pi pi-check" 
+                                    actionListener="#{profileView.saveProfile}" 
+                                    update="manage-profile-content" process="manage-profile-content @this" />
+                                <p:commandButton value="Cancel" icon="pi pi-times" 
+                                    onclick="PF('manageProfileDialog').hide()" class="ui-button-secondary" />
+                            </f:facet>
+                        </p:dialog> 
+
+                        <!-- Dialog de confirmation de suppression -->
+                        <p:confirmDialog widgetVar="deleteProfileDialog" showEffect="fade" width="300" 
+                                         message="Delete the profile?" header="Confirm" severity="warn">
+                            <p:commandButton value="Yes" icon="pi pi-check" 
+                                actionListener="#{profileView.deleteProfile}" 
+                                process="@this" oncomplete="PF('deleteProfileDialog').hide()"/>
+                            <p:commandButton value="No" type="button" styleClass="ui-button-secondary" 
+                                icon="pi pi-times" onclick="PF('deleteProfileDialog').hide()" />
+                        </p:confirmDialog>
+
+                        <p:confirmDialog global="true" showEffect="fade" width="300">
+                            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary" icon="pi pi-times" />
+                        </p:confirmDialog>
+
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

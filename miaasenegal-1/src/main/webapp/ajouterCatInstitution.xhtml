@@ -1,0 +1,154 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Gestion Catégorie Institution</ui:define>
+
+    <ui:define name="viewname">
+        <li><p:link outcome="/adminPage">Admin</p:link></li>
+        <li><i class="pi pi-chevron-right"></i></li>
+        <li>
+            <p:link outcome="/ajouterCatInstitution">Catégorie Institution</p:link>
+        </li>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <div class="grid crud-demo">
+                <div class="col-12">
+                    <div class="card">
+                        <p:growl id="messages" showDetail="true" />
+
+                        <p:toolbar styleClass="mb-4">
+                            <p:toolbarGroup>
+                                <p:commandButton value="New" icon="pi pi-plus" 
+                                    actionListener="#{categorieInstitutionView.openNew}" 
+                                    update="manage-cat-content" 
+                                    oncomplete="PF('manageCatDialog').show()" 
+                                    styleClass="ui-button-success" style="margin-right: .5rem" />
+                                <p:commandButton id="delete-cat-button" value="#{categorieInstitutionView.deleteButtonMessage}" 
+                                    icon="pi pi-trash" 
+                                    actionListener="#{categorieInstitutionView.deleteSelectedCats}" 
+                                    styleClass="ui-button-danger" 
+                                   
+                                    update="@this">
+                                    <p:confirm header="Confirmation" message="Delete the selected categories?" icon="pi pi-exclamation-triangle" />
+                                </p:commandButton>
+                                 <!-- disabled="#{!categorieInstitutionView.hasSelectedCats()}"  -->
+                            </p:toolbarGroup>
+                           
+                        </p:toolbar>
+
+                        <p:dataTable id="dt-cat" widgetVar="dtCat" var="cat" 
+                                     value="#{categorieInstitutionView.categorieInstitutions}" 
+                                     reflow="true" styleClass="products-table"
+                                     selection="#{categorieInstitutionView.selectedCats}" 
+                                     rowKey="#{cat.idcatins}" paginator="true" rows="10" 
+                                     rowSelectMode="add" paginatorPosition="bottom">
+                            <f:facet name="header">
+                                <div class="products-table-header">
+                                    <span style="font-weight: bold">Manage Catégories Institution</span>
+                                    <span class="filter-container ui-input-icon-left">
+                                        <i class="pi pi-search"></i>
+                                        <p:inputText id="globalFilter" onkeyup="PF('dtCat').filter()" placeholder="Search" />
+                                    </span>
+                                </div>
+                            </f:facet>
+
+                            <p:ajax event="rowSelect" update=":form:delete-cat-button" />
+                            <p:ajax event="rowUnselect" update=":form:delete-cat-button" />
+                            <p:ajax event="rowSelectCheckbox" update=":form:delete-cat-button" />
+                            <p:ajax event="rowUnselectCheckbox" update=":form:delete-cat-button" />
+                            <p:ajax event="toggleSelect" update=":form:delete-cat-button" />
+
+                            <!-- Colonne de sélection -->
+                            <p:column selectionMode="multiple" exportable="false" />
+
+                            <!-- Affichage des informations de la catégorie -->
+                            <p:column headerText="ID" sortBy="#{cat.idcatins}" filterBy="#{cat.idcatins}">
+                                <h:outputText value="#{cat.idcatins}" />
+                            </p:column>
+                            <p:column headerText="Libellé" sortBy="#{cat.libelle}" filterBy="#{cat.libelle}">
+                                <h:outputText value="#{cat.libelle}" />
+                            </p:column>
+                            <p:column headerText="Code" sortBy="#{cat.code}" filterBy="#{cat.code}">
+                                <h:outputText value="#{cat.code}" />
+                            </p:column>
+                            <p:column headerText="Date Création" sortBy="#{cat.datecreation}" filterBy="#{cat.datecreation}">
+                                <h:outputText value="#{cat.datecreation}" />
+                            </p:column>
+                            <p:column headerText="Nombre Éléments" sortBy="#{cat.nombreelements}" filterBy="#{cat.nombreelements}">
+                                <h:outputText value="#{cat.nombreelements}" />
+                            </p:column>
+
+                            <!-- Actions d'édition et de suppression -->
+                            <p:column exportable="false">
+                                <p:commandButton icon="pi pi-pencil" 
+                                    update=":form:manage-cat-content" 
+                                    oncomplete="PF('manageCatDialog').show()" 
+                                    styleClass="edit-button rounded-button ui-button-success" process="@this">
+                                    <f:setPropertyActionListener value="#{cat}" target="#{categorieInstitutionView.selectedCat}" />
+                                </p:commandButton>
+                                <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash" 
+                                    process="@this" oncomplete="PF('deleteCatDialog').show()">
+                                    <f:setPropertyActionListener value="#{cat}" target="#{categorieInstitutionView.selectedCat}" />
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+
+                        <!-- Dialog d'édition / création -->
+                        <p:dialog header="Catégorie Institution Details" showEffect="fade" modal="true" widgetVar="manageCatDialog" responsive="true">
+                            <p:outputPanel id="manage-cat-content" class="ui-fluid">
+                                <p:outputPanel rendered="#{not empty categorieInstitutionView.selectedCat}">
+                                    <div class="field">
+                                        <p:outputLabel for="libelle">Libellé</p:outputLabel>
+                                        <p:inputText id="libelle" value="#{categorieInstitutionView.selectedCat.libelle}" required="true" />
+                                    </div>
+                                    <div class="field">
+                                        <p:outputLabel for="code">Code</p:outputLabel>
+                                        <p:inputText id="code" value="#{categorieInstitutionView.selectedCat.code}" />
+                                    </div>
+                                    <div class="field">
+                                        <p:outputLabel for="datecreation">Date Création</p:outputLabel>
+                                        <p:inputText id="datecreation" value="#{categorieInstitutionView.selectedCat.datecreation}" />
+                                    </div>
+                                    <div class="field">
+                                        <p:outputLabel for="nombreelements">Nombre Éléments</p:outputLabel>
+                                        <p:inputNumber id="nombreelements" value="#{categorieInstitutionView.selectedCat.nombreelements}" />
+                                    </div>
+                                </p:outputPanel>
+                            </p:outputPanel>
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Save" icon="pi pi-check" 
+                                    actionListener="#{categorieInstitutionView.saveCat}" 
+                                    update="manage-cat-content" process="manage-cat-content @this" />
+                                <p:commandButton value="Cancel" icon="pi pi-times" 
+                                    onclick="PF('manageCatDialog').hide()" class="ui-button-secondary" />
+                            </f:facet>
+                        </p:dialog> 
+
+                        <!-- Dialog de confirmation de suppression -->
+                        <p:confirmDialog widgetVar="deleteCatDialog" showEffect="fade" width="300" 
+                                         message="Delete the category?" header="Confirm" severity="warn">
+                            <p:commandButton value="Yes" icon="pi pi-check" 
+                                actionListener="#{categorieInstitutionView.deleteCat}" 
+                                process="@this" oncomplete="PF('deleteCatDialog').hide()"/>
+                            <p:commandButton value="No" type="button" styleClass="ui-button-secondary" 
+                                icon="pi pi-times" onclick="PF('deleteCatDialog').hide()" />
+                        </p:confirmDialog>
+
+                        <p:confirmDialog global="true" showEffect="fade" width="300">
+                            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary" icon="pi pi-times" />
+                        </p:confirmDialog>
+
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

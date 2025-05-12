@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 26 f?vr. 2025, 12:37:11 by Hibernate Tools 4.3.6.Final -->
+<hibernate-mapping>
+    <class name="org.entitee.Question" table="question" schema="public" optimistic-lock="version">
+        <id name="idquestion" type="int">
+            <column name="idquestion" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="questionnaire" class="org.entitee.Questionnaire" fetch="select">
+            <column name="idquestionnaire" not-null="true" />
+        </many-to-one>
+        <property name="libelle" type="string">
+            <column name="libelle" length="254" />
+        </property>
+        <property name="code" type="java.lang.Integer">
+            <column name="code" />
+        </property>
+        <property name="datecreation" type="string">
+            <column name="datecreation" length="254" />
+        </property>
+        <property name="numeroordre" type="java.lang.Integer">
+            <column name="numeroordre" />
+        </property>
+        <property name="nombrereponses" type="java.lang.Integer">
+            <column name="nombrereponses" />
+        </property>
+        <property name="datepremieracces" type="string">
+            <column name="datepremieracces" length="254" />
+        </property>
+        <property name="datedernieraccces" type="string">
+            <column name="datedernieraccces" length="254" />
+        </property>
+        <property name="optionel" type="string">
+            <column name="optionel" length="254" />
+        </property>
+        <property name="autoriseremarque" type="java.lang.Integer">
+            <column name="autoriseremarque" />
+        </property>
+        <set name="reponses" table="reponse" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idquestion" not-null="true" />
+            </key>
+            <one-to-many class="org.entitee.Reponse" />
+        </set>
+        <set name="itemquestions" table="itemquestion" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idquestion" not-null="true" />
+            </key>
+            <one-to-many class="org.entitee.Itemquestion" />
+        </set>
+    </class>
+</hibernate-mapping>

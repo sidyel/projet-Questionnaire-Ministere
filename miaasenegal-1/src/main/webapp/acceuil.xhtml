@@ -1,0 +1,133 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templateEmploye.xhtml">
+
+	<!-- Titre de la page -->
+	<ui:define name="title">
+        Le New Deal Technologique pour la transformation numérique du Sénégal
+    </ui:define>
+
+	<!-- Nom de la vue dans la navigation -->
+	<ui:define name="viewname">
+		<li>Accueil</li>
+	</ui:define>
+
+	<!-- Contenu principal -->
+	<ui:define name="content">
+		<h:form id="homeForm">
+			<h2 class="text-center font-bold mb-4">Questionnaire du New Deal
+				Technologique pour la transformation numérique du Sénégal</h2>
+			<p:growl id="messages" showDetail="true" />
+
+			<!-- Section Projets -->
+			<div class="grid" style="max-width: 900px; margin: auto;">
+				<!-- Affichage des informations de l'utilisateur connecté -->
+				<h5 class="col-12  font-bold mb-3">
+					UTILISATEUR : #{homeView.currentEmploye.personne.nom}
+					#{homeView.currentEmploye.personne.prenom} <br /> INSTITUTION :
+					#{homeView.currentEmploye.institution.libelle} <br /> DIVISION :
+					#{homeView.currentEmploye.division.libelle}
+				</h5>
+
+				<!-- Message si aucun projet n'est présent -->
+				<p:outputPanel rendered="#{empty homeView.projects}"
+					style="text-align:center; margin:20px 0;">
+					<h4>Il n'y a pas de projet pour l'instant</h4>
+				</p:outputPanel>
+
+				<!-- DataView des projets existants -->
+				<p:dataView var="project" value="#{homeView.projects}"
+					gridIcon="pi pi-th-large" listIcon="pi pi-bars" paginator="true"
+					rows="10" layout="grid" paginatorPosition="bottom"
+					rendered="#{not empty homeView.projects}">
+
+					<p:dataViewGridItem>
+						<div class="col-12 md:col-12 lg:col-12 p-2">
+							<div class="card shadow-2 border-round-xl">
+								<div class="flex justify-content-between align-items-center">
+									<span class="font-bold" style="font-size: 1.3em; color: red;">
+										#{project.libelle} </span> <span class="text-gray-600"> ID:
+										#{project.idprojet} </span>
+								</div>
+								<p:graphicImage
+									value="https://via.placeholder.com/600x400?text=Projets"
+									style="width:100%; height:auto; border-radius:10px; margin-top:10px;" />
+								<div>
+									<strong>Date de création :</strong> #{project.datecreation}<br />
+									<strong>Date de début :</strong> #{project.datedebut}<br /> <strong>Date
+										de fin :</strong> #{project.datefin}
+								</div>
+								<p:commandButton value="Consulter les Questionnaires"
+									icon="pi pi-check" styleClass="w-full p-1 mt-2 border-round"
+									actionListener="#{homeView.loadQuestionnaires(project.idprojet)}"
+									update="questionnaireDialog"
+									oncomplete="PF('questionnaireDialogWidget').show();" />
+							</div>
+						</div>
+					</p:dataViewGridItem>
+				</p:dataView>
+			</div>
+
+			<!-- Section Gestion des projets (visible selon la permission) -->
+			<p:outputPanel rendered="#{homeView.hasPermission('creerProjet')}"
+				layout="block">
+				<div class="grid p-3">
+					<div class="col-12">
+						<h2 style="text-align: center;">Gestion des projets</h2>
+					</div>
+					<!-- Panneau Gestion Projet -->
+					<div class="col-12 md:col-612">
+						<p:panel header="Projet" styleClass="shadow-2 border-round p-3"
+							style="text-align:center;">
+							<p:button value="Gérer Les Projet"
+								outcome="projetCreeEmploye.xhtml" style="margin-top:1em;" />
+						</p:panel>
+					</div>
+				</div>
+			</p:outputPanel>
+		</h:form>
+
+		<!-- Dialog de consultation des questionnaires -->
+		<p:dialog id="questionnaireDialog"
+			widgetVar="questionnaireDialogWidget"
+			header="Questionnaires du Projet" modal="true" width="650"
+			responsive="true">
+			<h:form id="dialogForm">
+				<p:dataTable value="#{homeView.questionnaire}" var="qst"
+					style="width:100%;">
+					<p:column headerText="Libellé">
+						<h:outputText value="#{qst.libelle}" />
+					</p:column>
+					<p:column headerText="Objectif">
+						<h:outputText value="#{qst.objectif}" />
+					</p:column>
+					<p:column headerText="Date de création">
+						<h:outputText value="#{qst.datecreation}" />
+					</p:column>
+					<p:column headerText="Nombre de questions">
+						<h:outputText value="#{qst.nombrequestions}" />
+					</p:column>
+					<p:column headerText="Actions">
+						<p:commandButton value="Gérer Questions"
+							action="#{homeView.afficherQuestionsOuReponses(qst)}"
+							style="font-weight:bold;color:black;font-size:14px;margin-right:10px; width:100%; background-color: lightgreen;" />
+					</p:column>
+				</p:dataTable>
+				<p:commandButton value="Fermer" icon="pi pi-times"
+					onclick="PF('questionnaireDialogWidget').hide();"
+					style="margin-top:10px; padding:5px; width:100%;" />
+			</h:form>
+		</p:dialog>
+
+		<!-- Carousel des photos -->
+		<p:carousel value="#{mediaDemoView.photos}" var="photo" numVisible="1"
+			circular="true" autoplayInterval="3000"
+			style="margin-bottom:20px; max-width:100%; height:auto;">
+			<p:graphicImage name="#{photo.itemImageSrc}" alt="#{photo.alt}"
+				style="width:100%; height:550px; object-fit:cover;" />
+		</p:carousel>
+	</ui:define>
+</ui:composition>

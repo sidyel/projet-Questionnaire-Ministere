@@ -1,0 +1,146 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Gestion Permission</ui:define>
+
+    <ui:define name="viewname">
+        <li><p:link outcome="/adminPage">Admin</p:link></li>
+        <li><i class="pi pi-chevron-right"></i></li>
+        <li><p:link outcome="/permissionCRUD">Permission</p:link></li>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <div class="grid crud-demo">
+                <div class="col-12">
+                    <div class="card">
+                        <p:growl id="messages" showDetail="true" />
+
+                        <p:toolbar styleClass="mb-4">
+                            <p:toolbarGroup>
+                                <p:commandButton value="Nouveau" icon="pi pi-plus" 
+                                    actionListener="#{permissionView.openNew}" 
+                                    update="manage-permission-content" 
+                                    oncomplete="PF('managePermissionDialog').show()" 
+                                    styleClass="ui-button-success" style="margin-right: .5rem" />
+                                <p:commandButton id="delete-permission-button" value="#{permissionView.deleteButtonMessage}" 
+                                    icon="pi pi-trash" 
+                                    actionListener="#{permissionView.deleteSelectedPermissions}" 
+                                    styleClass="ui-button-danger" 
+                                    update="@this">
+                                    <p:confirm header="Confirmation" message="Supprimer les permissions sélectionnées ?" icon="pi pi-exclamation-triangle" />
+                                </p:commandButton>
+                            </p:toolbarGroup>
+                        </p:toolbar>
+
+                        <p:dataTable id="dt-permission" widgetVar="dtPermission" var="perm" 
+                                     value="#{permissionView.permissions}" 
+                                     reflow="true" styleClass="products-table"
+                                     selection="#{permissionView.selectedPermissions}" 
+                                     rowKey="#{perm.idpermission}" paginator="true" rows="10" 
+                                     rowSelectMode="add" paginatorPosition="bottom">
+                            <f:facet name="header">
+                                <div class="products-table-header">
+                                    <span style="font-weight: bold">Gestion des Permissions</span>
+                                    <span class="filter-container ui-input-icon-left">
+                                        <i class="pi pi-search"></i>
+                                        <p:inputText id="globalFilter" onkeyup="PF('dtPermission').filter()" placeholder="Recherche" />
+                                    </span>
+                                </div>
+                            </f:facet>
+
+                            <p:ajax event="rowSelect" update=":form:delete-permission-button" />
+                            <p:ajax event="rowUnselect" update=":form:delete-permission-button" />
+                            <p:ajax event="rowSelectCheckbox" update=":form:delete-permission-button" />
+                            <p:ajax event="rowUnselectCheckbox" update=":form:delete-permission-button" />
+                            <p:ajax event="toggleSelect" update=":form:delete-permission-button" />
+
+                            <!-- Colonne de sélection -->
+                            <p:column selectionMode="multiple" exportable="false" />
+
+                            <!-- Affichage des informations -->
+                            <p:column headerText="ID" sortBy="#{perm.idpermission}" filterBy="#{perm.idpermission}">
+                                <h:outputText value="#{perm.idpermission}" />
+                            </p:column>
+                            <p:column headerText="Permission" sortBy="#{perm.permission}" filterBy="#{perm.permission}">
+                                <h:outputText value="#{perm.permission}" />
+                            </p:column>
+                            <p:column headerText="Code" sortBy="#{perm.code}" filterBy="#{perm.code}">
+                                <h:outputText value="#{perm.code}" />
+                            </p:column>
+                            <p:column headerText="Date Création" sortBy="#{perm.datecreation}" filterBy="#{perm.datecreation}">
+                                <h:outputText value="#{perm.datecreation}" />
+                            </p:column>
+                            <p:column headerText="État" sortBy="#{perm.etat}" filterBy="#{perm.etat}">
+                                <h:outputText value="#{perm.etat}" />
+                            </p:column>
+
+                            <!-- Actions d'édition et de suppression -->
+                            <p:column exportable="false">
+                                <p:commandButton icon="pi pi-pencil" 
+                                    update=":form:manage-permission-content" 
+                                    oncomplete="PF('managePermissionDialog').show()" 
+                                    styleClass="edit-button rounded-button ui-button-success" process="@this">
+                                    <f:setPropertyActionListener value="#{perm}" target="#{permissionView.selectedPermission}" />
+                                </p:commandButton>
+                                <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash" 
+                                    process="@this" oncomplete="PF('deletePermissionDialog').show()">
+                                    <f:setPropertyActionListener value="#{perm}" target="#{permissionView.selectedPermission}" />
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+
+                        <!-- Dialog d'édition / création -->
+                        <p:dialog header="Détails de la Permission" showEffect="fade" modal="true" widgetVar="managePermissionDialog" responsive="true">
+                            <p:outputPanel id="manage-permission-content" class="ui-fluid">
+                                <p:outputPanel rendered="#{not empty permissionView.selectedPermission}">
+                                    <div class="field">
+                                        <p:outputLabel for="permission">Permission</p:outputLabel>
+                                        <p:inputText id="permission" value="#{permissionView.selectedPermission.permission}" required="true" />
+                                    </div>
+                                    <div class="field">
+                                        <p:outputLabel for="code">Code</p:outputLabel>
+                                        <p:inputText id="code" value="#{permissionView.selectedPermission.code}" />
+                                    </div>
+                                    
+                                    <div class="field">
+                                        <p:outputLabel for="etat">État</p:outputLabel>
+                                        <p:inputText id="etat" value="#{permissionView.selectedPermission.etat}" />
+                                    </div>
+                                </p:outputPanel>
+                            </p:outputPanel>
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Enregistrer" icon="pi pi-check" 
+                                    actionListener="#{permissionView.savePermission}" 
+                                    update="manage-permission-content" process="manage-permission-content @this" />
+                                <p:commandButton value="Annuler" icon="pi pi-times" 
+                                    onclick="PF('managePermissionDialog').hide()" class="ui-button-secondary" />
+                            </f:facet>
+                        </p:dialog> 
+
+                        <!-- Dialog de confirmation de suppression -->
+                        <p:confirmDialog widgetVar="deletePermissionDialog" showEffect="fade" width="300" 
+                                         message="Supprimer la permission ?" header="Confirmation" severity="warn">
+                            <p:commandButton value="Oui" icon="pi pi-check" 
+                                actionListener="#{permissionView.deletePermission}" 
+                                process="@this" oncomplete="PF('deletePermissionDialog').hide()"/>
+                            <p:commandButton value="Non" type="button" styleClass="ui-button-secondary" 
+                                icon="pi pi-times" onclick="PF('deletePermissionDialog').hide()" />
+                        </p:confirmDialog>
+
+                        <p:confirmDialog global="true" showEffect="fade" width="300">
+                            <p:commandButton value="Oui" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                            <p:commandButton value="Non" type="button" styleClass="ui-confirmdialog-no ui-button-secondary" icon="pi pi-times" />
+                        </p:confirmDialog>
+
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

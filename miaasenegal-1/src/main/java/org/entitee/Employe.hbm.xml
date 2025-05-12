@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 26 f?vr. 2025, 12:37:11 by Hibernate Tools 4.3.6.Final -->
+<hibernate-mapping>
+    <class name="org.entitee.Employe" table="employe" schema="public" optimistic-lock="version">
+        <composite-id name="id" class="org.entitee.EmployeId">
+            <key-property name="idpersonne" type="int">
+                <column name="idpersonne" />
+            </key-property>
+            <key-property name="idemploye" type="int">
+                <column name="idemploye" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="division" class="org.entitee.Division" fetch="select">
+            <column name="iddivision" />
+        </many-to-one>
+        <many-to-one name="institution" class="org.entitee.Institution" fetch="select">
+            <column name="idins" not-null="true" />
+        </many-to-one>
+        <many-to-one name="personne" class="org.entitee.Personne" update="false" insert="false" fetch="select">
+            <column name="idpersonne" not-null="true" />
+        </many-to-one>
+        <property name="matricule" type="string">
+            <column name="matricule" length="254" />
+        </property>
+        <property name="codesecret" type="java.lang.Integer">
+            <column name="codesecret" />
+        </property>
+        <property name="datecreation" type="string">
+            <column name="datecreation" length="254" />
+        </property>
+        <property name="etat" type="string">
+            <column name="etat" length="254" />
+        </property>
+        <set name="reponses" table="reponse" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idpersonne" not-null="true" />
+                <column name="idemploye" not-null="true" />
+            </key>
+            <one-to-many class="org.entitee.Reponse" />
+        </set>
+    </class>
+</hibernate-mapping>

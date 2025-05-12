@@ -1,0 +1,124 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templateEmploye.xhtml">
+
+	<ui:define name="title">Répondre au Questionnaire</ui:define>
+
+	<!-- Définition de styles pour le responsive et le retour à la ligne -->
+	<ui:define name="head">
+		<style>
+.responsive-panel {
+	max-width: 800px;
+	width: 100%;
+	margin: auto;
+}
+
+.wrap-text {
+	white-space: pre-wrap;
+	word-wrap: break-word;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="questionForm">
+			<p:growl id="messages" showDetail="true" />
+			<p:panel
+				header="Veuillez Répondre aux question du Questionnaire et Enregistrer"
+				styleClass="responsive-panel">
+				<p:outputPanel id="questionnaire-content" class="ui-fluid">
+					<ui:repeat value="#{questionView.questionsreponses}" var="question">
+						<div class="field" style="margin-bottom: 20px;">
+							<p:outputLabel value="#{question.quest.libelle}"
+								style="font-weight:bold; margin-bottom:5px; color:red;" />
+							<!-- Si des réponses possibles existent, on affiche un selectOneRadio -->
+							<p:outputPanel rendered="#{question.item}">
+								<p:selectOneRadio
+									value="#{questionView.answers[question.quest.idquestion]}"
+									required="false" style="font-weight:bold;">
+									<f:selectItems value="#{question.quest.itemquestions}"
+										var="item" itemValue="#{item.valeur}"
+										itemLabel="#{item.valeur}" />
+								</p:selectOneRadio>
+							</p:outputPanel>
+							<!-- Sinon, on affiche un champ libre -->
+							<p:outputPanel rendered="#{question.noItem}">
+								<p:inputTextarea
+									value="#{questionView.answers[question.quest.idquestion]}"
+									styleClass="wrap-text"
+									style="color:blue; font-size:14px; font-weight:bold;" rows="10"
+									cols="50" autoResize="false" required="false" />
+							</p:outputPanel>
+
+							<p:panelGrid columns="2">
+								<h:outputText
+									value="Votre réponse ----------------------------------------------> "
+									style="background:yellow; color:black; font-size:14px; font-weight:bold;" />
+								<p:outputPanel
+									style="background:cyan; color:red; font-size:14px; font-weight:bold;
+                         white-space: pre-wrap; word-wrap: break-word; 
+                         max-height:200px; overflow-y:auto; padding:5px;">
+									<h:outputText value="#{question.rep.valeur}" />
+								</p:outputPanel>
+							</p:panelGrid>
+
+						</div>
+					</ui:repeat>
+
+				</p:outputPanel>
+				<f:facet name="footer">
+					<!-- Bouton qui lance l'action d'enregistrement -->
+					<p:commandButton value="Enregistrer" icon="pi pi-check"
+						disabled="#{questionView.actifOuiNonsaveReponse}"
+						style="font-weight:bold; font-size:18px; background:lightgreen; color:black;"
+						action="#{questionView.submitAnswers}"
+						update=":questionForm:messages" process="@form" />
+					<!-- <p:commandButton value="Prévisualiser" icon="pi pi-eye"
+                         update=":previewDialog" process="@form"
+                         oncomplete="PF('previewDialog').show();" /> -->
+				</f:facet>
+			</p:panel>
+		</h:form>
+
+		<!-- Dialog de prévisualisation des réponses -->
+		<p:dialog id="previewDialog" widgetVar="previewDialog"
+			header="Prévisualisation des réponses" modal="true" resizable="false"
+			width="500">
+			<h:form id="previewForm">
+				<p:outputPanel id="previewContent">
+					<ui:repeat value="#{questionView.questions}" var="question">
+						<div class="field" style="margin-bottom: 20px;">
+							<p:outputLabel value="#{question.libelle}"
+								style="font-weight:bold; margin-bottom:5px;" />
+							<!-- Si des réponses possibles existent, on affiche un selectOneRadio -->
+							<p:outputPanel rendered="#{not empty question.itemquestions}">
+								<p:selectOneRadio
+									value="#{questionView.answers[question.idquestion]}"
+									required="false">
+									<f:selectItems value="#{question.itemquestions}" var="item"
+										itemValue="#{item.valeur}" itemLabel="#{item.valeur}" />
+								</p:selectOneRadio>
+							</p:outputPanel>
+							<!-- Sinon, on affiche un champ libre -->
+							<p:outputPanel rendered="#{empty question.itemquestions}">
+								<p:inputTextarea
+									value="#{questionView.answers[question.idquestion]}"
+									styleClass="wrap-text" rows="1" cols="50" autoResize="false"
+									required="true" />
+							</p:outputPanel>
+						</div>
+					</ui:repeat>
+				</p:outputPanel>
+				<p:commandButton value="Enregistrer" icon="pi pi-check"
+					action="#{questionView.submitAnswers}"
+					update=":questionForm:messages" process="@form"
+					oncomplete="PF('previewDialog').hide();" />
+				<p:commandButton value="Annuler" icon="pi pi-times"
+					onclick="PF('previewDialog').hide();" type="button" />
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

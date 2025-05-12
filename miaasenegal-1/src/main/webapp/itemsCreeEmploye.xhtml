@@ -1,0 +1,149 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui" template="/WEB-INF/templateEmploye.xhtml">
+
+    <ui:define name="title">Gestion des Items de la Question</ui:define>
+
+    <ui:define name="viewname">
+        
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <div class="grid crud-demo">
+                <div class="col-12">
+                    <div class="card">
+                        <p:growl id="messages" showDetail="true" />
+
+                        <h3>Items pour la Question ID: #{itemquestionBean.questionId}</h3>
+
+                        <!-- Toolbar -->
+                        <p:toolbar styleClass="mb-4">
+                            <p:toolbarGroup>
+                                <p:commandButton value="New" icon="pi pi-plus"
+                                    actionListener="#{itemquestionBean.openNew}"
+                                    update=":form:manage-item-content"
+                                    oncomplete="PF('itemDialog').show()"
+                                    styleClass="ui-button-success" style="margin-right: .5rem" />
+                                <p:commandButton id="delete-items-button"
+                                    value="#{itemquestionBean.deleteButtonMessage}"
+                                    icon="pi pi-trash"
+                                    actionListener="#{itemquestionBean.deleteSelectedItems}"
+                                    styleClass="ui-button-danger"
+                                    update=":form:dt-items :form:delete-items-button :form:messages">
+                                    <p:confirm header="Confirmation"
+                                        message="Supprimer les éléments sélectionnés ?"
+                                        icon="pi pi-exclamation-triangle" />
+                                </p:commandButton>
+                            </p:toolbarGroup>
+                           
+                        </p:toolbar>
+
+                        <!-- DataTable -->
+                        <p:dataTable id="dt-items" widgetVar="dtItems" var="item"
+                            value="#{itemquestionBean.items}" reflow="true"
+                            selection="#{itemquestionBean.selectedItems}"
+                            rowKey="#{item.iditemquestion}" paginator="true" rows="10"
+                            rowSelectMode="add" paginatorPosition="bottom"
+                            styleClass="table-striped">
+
+                            <f:facet name="header">
+                                <div class="products-table-header">
+                                    <span style="font-weight: bold">Manage Items</span>
+                                    <span class="ui-input-icon-left">
+                                        <i class="pi pi-search"></i>
+                                        <p:inputText id="globalFilter"
+                                            onkeyup="PF('dtItems').filter()" placeholder="Search" />
+                                    </span>
+                                </div>
+                            </f:facet>
+
+                            <p:ajax event="rowSelect" update=":form:delete-items-button" />
+                            <p:ajax event="rowUnselect" update=":form:delete-items-button" />
+                            <p:ajax event="rowSelectCheckbox" update=":form:delete-items-button" />
+                            <p:ajax event="rowUnselectCheckbox" update=":form:delete-items-button" />
+                            <p:ajax event="toggleSelect" update=":form:delete-items-button" />
+
+                            <!-- Colonne de sélection -->
+                            <p:column selectionMode="multiple" exportable="false" />
+
+                            <!-- Colonnes d'information -->
+                            <p:column headerText="ID" sortBy="#{item.iditemquestion}" filterBy="#{item.iditemquestion}">
+                                <h:outputText value="#{item.iditemquestion}" />
+                            </p:column>
+                            <p:column headerText="Valeur" sortBy="#{item.valeur}" filterBy="#{item.valeur}">
+                                <h:outputText value="#{item.valeur}" />
+                            </p:column>
+                            <p:column headerText="Date Création" sortBy="#{item.datecreation}" filterBy="#{item.datecreation}">
+                                <h:outputText value="#{item.datecreation}" />
+                            </p:column>
+                            <p:column headerText="Numéro Ordre" sortBy="#{item.numeroordre}" filterBy="#{item.numeroordre}">
+                                <h:outputText value="#{item.numeroordre}" />
+                            </p:column>
+
+                            <!-- Actions -->
+                            <p:column headerText="Actions" exportable="false">
+                                <p:commandButton icon="pi pi-pencil"
+                                    update=":form:manage-item-content"
+                                    oncomplete="PF('itemDialog').show()"
+                                    styleClass="ui-button-success" process="@this">
+                                    <f:setPropertyActionListener value="#{item}"
+                                        target="#{itemquestionBean.selectedItem}" />
+                                </p:commandButton>
+                               
+                                <p:commandButton class="ui-button-warning" icon="pi pi-trash"
+									process="@this" oncomplete="PF('deleteQuestionDialog').show()">
+									<f:setPropertyActionListener value="#{item}"
+										target="#{itemquestionBean.selectedItem}" />
+								</p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dialog pour Ajouter/Modifier un Item -->
+            <p:dialog id="itemDialog" header="Item Details"
+                widgetVar="itemDialog" modal="true" closable="true"
+                resizable="false" width="500px">
+                <p:outputPanel id="manage-item-content" class="ui-fluid">
+                    <p:panelGrid columns="2" style="margin-bottom:10px" columnClasses="label,value">
+                        <p:outputLabel for="valeur" value="Valeur:" />
+                        <p:inputText id="valeur" value="#{itemquestionBean.selectedItem.valeur}" required="true" />
+
+                        <p:outputLabel for="datecreation" value="Date Création:" />
+                        <p:inputText id="datecreation" value="#{itemquestionBean.selectedItem.datecreation}" />
+
+                        <p:outputLabel for="numeroordre" value="Numéro Ordre:" />
+                        <p:inputText id="numeroordre" value="#{itemquestionBean.selectedItem.numeroordre}" />
+                    </p:panelGrid>
+                    <p:commandButton value="Save"
+                        actionListener="#{itemquestionBean.saveItem}"
+                        update=":form:dt-items :form:messages"
+                        oncomplete="PF('itemDialog').hide()"
+                        styleClass="ui-button-success" />
+                </p:outputPanel>
+            </p:dialog>
+            <p:confirmDialog widgetVar="deleteQuestionDialog"
+							showEffect="fade" width="300" message="Delete the item"
+							header="Confirm" severity="warn">
+							<p:commandButton value="Yes" icon="pi pi-check"
+								actionListener="#{itemquestionBean.deleteItem}" process="@this"
+								oncomplete="PF('deleteQuestionDialog').hide()" />
+							<p:commandButton value="No" type="button"
+								styleClass="ui-button-secondary" icon="pi pi-times"
+								onclick="PF('deleteQuestionDialog').hide()" />
+						</p:confirmDialog>
+
+						<p:confirmDialog global="true" showEffect="fade" width="300">
+							<p:commandButton value="Yes" type="button"
+								styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+							<p:commandButton value="No" type="button"
+								styleClass="ui-confirmdialog-no ui-button-secondary"
+								icon="pi pi-times" />
+						</p:confirmDialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:po="http://primefaces.org/poseidon">
+
+	<div class="menu-wrapper">
+		<div class="layout-menu-container">
+			<h:form id="menuform">
+				<po:menu widgetVar="PoseidonMenuWidget">
+					<!-- Menu Administration -->
+					<p:submenu id="m_homepage" label="Administration" icon="pi pi-cog">
+						<p:menuitem id="m_adminPage" value="Admin Page" icon="pi pi-home"
+							outcome="/adminPage" />
+					</p:submenu>
+
+					<!-- Menu Institution -->
+					<p:submenu id="inst" label="Gestion des Institutions"
+						icon="pi pi-building">
+						<p:menuitem id="m_ajouterCatInstitution"
+							value="Ajouter Cat Institution" icon="pi pi-plus"
+							outcome="/categorieInstitution1" />
+						<p:menuitem id="m_divisionCRUD" value="Division CRUD"
+							icon="pi pi-sitemap" outcome="/divisionCRUD" />
+						<p:menuitem id="m_institutionCRUD" value="Institution CRUD"
+							icon="pi pi-university" outcome="/institutionCRUD" />
+					</p:submenu>
+
+					<!-- Menu Gestion Personne -->
+					<p:submenu id="GestionPersonne" label="Gestion des Personnes"
+						icon="pi pi-users">
+						<p:menuitem id="employe" value="Employé CRUD" icon="pi pi-user"
+							outcome="/employeCRUD" />
+						<p:menuitem id="profil" value="Profil CRUD" icon="pi pi-id-card"
+							outcome="/profileCRUD" />
+						<p:menuitem id="Permission" value="Permission CRUD" icon="pi pi-id-card"
+							outcome="permissionCRUD" />
+					</p:submenu>
+					
+					<!-- Institution -->
+					<p:submenu id="m_institution" label="Institution"
+						icon="pi pi-building">
+						<p:menuitem id="m_logout" value="Déconnexion"
+							icon="pi pi-sign-out" outcome="/login" />
+					</p:submenu>
+				</po:menu>
+			</h:form>
+		</div>
+	</div>
+
+</ui:composition>

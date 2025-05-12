@@ -1,0 +1,86 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Évaluation du Questionnaire</ui:define>
+
+	<ui:define name="content">
+
+		<!-- Conteneur principal -->
+		<div class="container"
+			style="max-width: 900px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); font-family: Arial, sans-serif; color: #333;">
+
+			<h:form id="evalForm" style="padding: 20px;">
+
+				<!-- Titre du questionnaire -->
+				<h2
+					style="font-size: 24px; color: #007ad9; border-bottom: 3px solid #007ad9; padding-bottom: 5px;">
+					Évaluation du Questionnaire :
+					#{evaluationBean.questionnaire.libelle}</h2>
+
+				<!-- Nombre de participants -->
+				<h3 style="font-size: 20px; color: #555; margin-top: 15px;">
+					Nombre de personnes ayant répondu au formulaire : <span
+						style="font-weight: bold; color: #007ad9;">
+						#{evaluationBean.nombre} </span>
+				</h3>
+
+
+				<!-- Vérifier si toutes les questions sont vides -->
+				<h:panelGroup rendered="#{evaluationBean.allQuestionsEmpty}">
+					<h4 style="color: red; font-style: italic;">Il n'y a pas de
+						réponse pour l'instant.</h4>
+				</h:panelGroup>
+
+				<ui:repeat value="#{evaluationBean.questions}" var="question">
+					<h3 style="font-size: 18px; color: #444; margin-top: 20px;">
+						Question : #{question.libelle}</h3>
+
+					<p:dataTable
+						value="#{evaluationBean.evaluationResults[question.idquestion]}"
+						var="ip"
+						rendered="#{not empty evaluationBean.evaluationResults[question.idquestion]}"
+						styleClass="ui-datatable"
+						style="width: 100%;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        border-collapse: collapse;
+                        margin-top: 10px; ">
+
+						<p:column headerText="Réponse possible"
+							style="background-color: #3399ff; 
+                         text-align: left; 
+                         padding: 10px;">
+							<h:outputText value="#{ip.libelle}"
+								style="color:black;font-size:1.1em" />
+						</p:column>
+
+						<p:column headerText="Pourcentage"
+							style="background-color: #3399ff; 
+                         color: black; 
+                         text-align: left; 
+                         padding: 10px; font-size:1.1em">
+							<h:outputText value="#{ip.pourcentage}"
+								style="font-weight: bold; color: black; font-size:1.1em">
+								<f:convertNumber pattern="#0.00" />
+							</h:outputText> %
+        				</p:column>
+
+						<p:column headerText="Nombre"
+							style="background-color: #3399ff; 
+                         color: black; 
+                         text-align: left; 
+                         padding: 10px; font-size:1.1em">
+							<h:outputText value="#{ip.count}"
+								style="font-weight: bold; color: black; font-size:1.1em" />
+						</p:column>
+					</p:dataTable>
+
+				</ui:repeat>
+
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>

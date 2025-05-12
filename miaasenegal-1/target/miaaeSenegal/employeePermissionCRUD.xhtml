@@ -1,0 +1,49 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Gestion des Permissions des Employés</ui:define>
+
+    <ui:define name="viewname">
+        <li>ADMIN</li>
+        <li><i class="pi pi-chevron-right"></i></li>
+        <li><p:link outcome="/employeePermissionCRUD">Permissions Employés</p:link></li>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="messages" showDetail="true" />
+            
+            <!-- Bouton pour sauvegarder toutes les modifications (optionnel) -->
+            <p:commandButton value="Sauvegarder Tous" actionListener="#{employeePermissionBean.saveAll}"
+                             update="form:dtEmployees, form:messages" icon="pi pi-save" />
+
+            <!-- DataTable affichant la liste des employés et leurs permissions -->
+            <p:dataTable id="dtEmployees" widgetVar="dtEmployees" var="empWrap"
+                         value="#{employeePermissionBean.employeePermissions}" reflow="true"
+                         paginator="true" rows="10" rowKey="#{empWrap.employee.idpersonne}" styleClass="table-striped">
+                <f:facet name="header">
+                    <div>
+                        <span style="font-weight: bold">Gestion des Permissions par Employé</span>
+                    </div>
+                </f:facet>
+                <p:column headerText="Employé">
+                    <h:outputText value="#{empWrap.employee.prenom} #{empWrap.employee.nom}" />
+                </p:column>
+                <p:column headerText="Permissions">
+                    <p:selectManyCheckbox value="#{empWrap.selectedPermissionIds}" layout="grid" columns="3">
+                        <f:selectItems value="#{employeePermissionBean.allPermissions}" var="perm"
+                                       itemLabel="#{perm.permission}" itemValue="#{perm.idpermission}" />
+                    </p:selectManyCheckbox>
+                </p:column>
+                <p:column headerText="Actions">
+                    <p:commandButton value="Sauvegarder" actionListener="#{employeePermissionBean.saveEmployeePermissions(empWrap)}"
+                                     update=":form:messages" icon="pi pi-save" />
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>

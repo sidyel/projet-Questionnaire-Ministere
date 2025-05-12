@@ -1,0 +1,138 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Gestion des Questionnaires</ui:define>
+	<ui:define name="viewname">
+		<li><p:link outcome="/adminPage">Admin</p:link></li>
+		<li><i class="pi pi-chevron-right"></i></li>
+	</ui:define>
+
+	<!-- Définition des styles CSS pour le texte long et la taille de police -->
+	<ui:define name="head">
+		<style>
+/* Forcer le retour à la ligne et couper les mots trop longs, avec une taille de police augmentée */
+.wrap-text {
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	font-size: 18px; /* Taille de police augmentée */
+}
+/* Limiter la hauteur et activer le défilement vertical */
+.scrollable-text {
+	max-height: 150px; /* Ajustez cette valeur selon vos besoins */
+	overflow-y: auto;
+	padding: 5px;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form">
+			<div class="grid crud-demo">
+				<div class="col-12">
+					<div class="card">
+						<p:growl id="messages" showDetail="true" />
+						<!-- Toolbar -->
+						<!-- DataTable principale -->
+						<p:dataTable id="dt-questionnaires" widgetVar="dtQuestionnaires"
+							var="rep" value="#{questionBean.reponses}"
+							styleClass="products-table" paginator="true" rows="10"
+							paginatorPosition="bottom"
+							globalFilterFields="employe.personne.nom,employe.institution.libelle,question.questionnaire.projet.libelle,question.libelle,valeur">
+							<f:facet name="header">
+								<div class="products-table-header">
+									<span style="font-weight: bold">Gerer les Reponses</span> <span
+										class="filter-container ui-input-icon-left"> <i
+										class="pi pi-search"></i> <p:inputText id="globalFilter"
+											onkeyup="PF('dtQuestionnaires').filter()"
+											placeholder="Search" />
+									</span>
+								</div>
+							</f:facet>
+
+							<!-- Colonne pour prenom et nom -->
+							<p:column headerText="prenom et nom"
+								sortBy="#{rep.employe.personne.nom}"
+								filterBy="#{rep.employe.personne.nom}" style="width:150px;">
+								<h:outputText
+									value="#{rep.employe.personne.nom} #{rep.employe.personne.prenom}" />
+							</p:column>
+
+							<p:column headerText="Institution"
+								sortBy="#{rep.employe.institution.libelle}"
+								filterBy="#{rep.employe.institution.libelle}"
+								style="width:150px;">
+								<h:outputText value="#{rep.employe.institution.libelle}" />
+							</p:column>
+
+							<p:column headerText="Projet"
+								sortBy="#{rep.question.questionnaire.projet.libelle}"
+								filterBy="#{rep.question.questionnaire.projet.libelle}"
+								style="width:150px;">
+								<h:outputText
+									value="#{rep.question.questionnaire.projet.libelle}" />
+							</p:column>
+
+							<p:column headerText="Actions">
+								<p:commandButton value="Consulter mes réponses"
+									icon="pi pi-file"
+									actionListener="#{questionBean.afficherReponsesParEmploye(rep.employe.id.idemploye)}"
+									update=":form:mesReponsesDialog"
+									oncomplete="PF('mesReponsesDialogWidget').show()"
+									style="margin-right:10px;" />
+							</p:column>
+
+						</p:dataTable>
+
+						<!-- Dialog pour consulter les réponses -->
+						<p:dialog id="mesReponsesDialog"
+							widgetVar="mesReponsesDialogWidget" header="Mes Réponses"
+							modal="true" responsive="true" width="800"
+							contentStyle="max-height: 500px; overflow: auto;">
+							<p:dataTable value="#{questionBean.selecedreponses}" var="r"
+								scrollable="true" scrollHeight="300">
+								<p:column headerText="Question">
+									<h:outputText value="#{r.question.libelle}" />
+								</p:column>
+								<p:column headerText="Réponse" style="width:400px;">
+									<p:outputPanel styleClass="wrap-text scrollable-text">
+										<h:outputText value="#{r.valeur}" />
+									</p:outputPanel>
+								</p:column>
+								<p:column headerText="Date de réponse">
+									<h:outputText value="#{r.datereponse}" />
+								</p:column>
+							</p:dataTable>
+						</p:dialog>
+
+
+						<!-- Confirm Dialog pour suppression d'un questionnaire -->
+						<p:confirmDialog widgetVar="deleteQuestionnaireDialog"
+							showEffect="fade" width="300" message="Delete the questionnaire?"
+							header="Confirm" severity="warn">
+							<p:commandButton value="Yes" icon="pi pi-check"
+								actionListener="#{questionnaireBean.deleteQuestionnaire}"
+								process="@this"
+								oncomplete="PF('deleteQuestionnaireDialog').hide()" />
+							<p:commandButton value="No" type="button"
+								styleClass="ui-button-secondary" icon="pi pi-times"
+								onclick="PF('deleteQuestionnaireDialog').hide()" />
+						</p:confirmDialog>
+
+						<p:confirmDialog global="true" showEffect="fade" width="300">
+							<p:commandButton value="Yes" type="button"
+								styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+							<p:commandButton value="No" type="button"
+								styleClass="ui-confirmdialog-no ui-button-secondary"
+								icon="pi pi-times" />
+						</p:confirmDialog>
+
+					</div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

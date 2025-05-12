@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 26 f?vr. 2025, 12:37:11 by Hibernate Tools 4.3.6.Final -->
+<hibernate-mapping>
+    <class name="org.entitee.Projet" table="projet" schema="public" optimistic-lock="version">
+        <id name="idprojet" type="int">
+            <column name="idprojet" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="institution" class="org.entitee.Institution" fetch="select">
+            <column name="idins" not-null="true" />
+        </many-to-one>
+        <property name="libelle" type="string">
+            <column name="libelle" />
+        </property>
+        <property name="code" type="java.lang.Integer">
+            <column name="code" />
+        </property>
+        <property name="datecreation" type="string">
+            <column name="datecreation" length="254" />
+        </property>
+        <property name="datedebut" type="string">
+            <column name="datedebut" length="254" />
+        </property>
+        <property name="datefin" type="string">
+            <column name="datefin" length="254" />
+        </property>
+        <property name="budget" type="java.lang.Integer">
+            <column name="budget" />
+        </property>
+        <set name="questionnaires" table="questionnaire" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idprojet" not-null="true" />
+            </key>
+            <one-to-many class="org.entitee.Questionnaire" />
+        </set>
+    </class>
+</hibernate-mapping>

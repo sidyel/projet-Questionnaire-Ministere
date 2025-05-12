@@ -1,0 +1,247 @@
+.layout-dashboard {
+    .traffic {
+        overflow-x: hidden;
+        > span {
+            display: block;
+            margin-top: 2px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: $textColor;
+        }
+
+        .traffic-tabs { 
+            margin-top: 28px;
+            @include flex();
+            @include flex-align-center();
+            @include flex-justify-between();
+
+            .traffic-tab {
+                border-radius: 4px;
+                background-color: $contentAltBgColor;
+                text-align: center;
+                padding: 6px 1px 8px;
+                width: 100%;
+                margin-right: 5px;
+                cursor: pointer;
+                @include transition(background-color $transitionDuration);
+
+                &:last-child{
+                    margin: 0;
+                }
+
+                > h6 {
+                    font-weight: bold;
+                    margin: 0;
+                    color: $textColor;
+                    margin-bottom: 10px;
+                }
+
+                > i {
+                    font-size: 24px;
+                }
+
+                > span {
+                    display: block;
+                    font-size: 12px;
+                    color: $textColor;  
+                    margin-top: 6px;
+                }
+
+                &:hover {
+                    background-color: rgba($contentAltBgColor, .4);
+                }
+
+                &.traffic-tab-active {
+                    background-color: #1c75c6;
+                    background-color: var(--primary-dark-color,#1c75c6);
+                    > h6,
+                    > span,
+                    i {
+                        color: #ffffff;
+                    }
+                    &:hover {
+                        background-color: #2c84d8;
+                        background-color: var(--primary-color,#2c84d8)
+                    }
+                }
+            }
+        }
+
+        .traffic-chart {
+            @include flex();
+            @include flex-justify-center();
+        }
+
+    }
+
+    .goals {
+        overflow-x: hidden;
+        background-image: linear-gradient(134deg, #2873D3, #2873D3 99%);
+        background-image: linear-gradient(134deg, var(--primary-color,#2873D3), var(--primary-dark-color,#2873D3) 99%);
+
+        .card-header {
+            padding: 0;
+            > h6 {
+                color: #ffffff;
+                color: var(--primary-color-text,#ffffff);
+            }
+
+            > span {
+                color: #ffffff;
+                color: var(--primary-color-text,#ffffff);
+                font-size: 11px;
+                display: block;
+
+                > span {
+                    font-size: 14px;
+                    font-weight: 600;
+                }
+            }
+        }
+
+        > span {
+            color: #ffffff;
+            color: var(--primary-color-text,#ffffff);
+            opacity: 0.8;
+            font-size: 12px;
+            font-weight: 600;
+            display: block;
+        }
+
+        .goal-graph {
+            @include flex();
+            @include flex-justify-center();
+            padding: 24px 0;
+            > img {
+                width: 100%;
+                max-width: 240px;
+                height: auto;
+            }
+
+        }
+    }
+
+    .leaderboard {
+        height: 100%;
+        > ul {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+            > li {
+                @include flex();
+                @include flex-align-center();
+                @include flex-justify-between();
+                margin-top: 6px;
+                padding: 5px 0;
+                padding: 6px;
+                @include border-radius(4px);
+                cursor: pointer;
+                &:hover {
+                    background-color: rgba($contentAltBgColor,.7);
+                }
+
+                .person {
+                    @include flex();
+                    @include flex-align-center();
+
+                    > img {
+                        width: 32px;
+                        height: 32px;
+                        margin-right: 12px;
+                    }
+
+                    > p {
+                        margin: 0;
+                        color: $textColor;
+                    }
+                }
+
+                .person-numbers {
+                    @include flex();
+                    @include flex-align-center();
+
+                    > h6 {
+                        margin: 0;
+                        color: $textColor;
+                        font-weight: 600;
+                        margin-right: 12px;
+                    }
+
+                    > i {
+                        color: #00acac;
+                    }
+                }
+            }
+        }
+    }
+    .sales {
+        .card-header {
+            margin-bottom: 8px;
+        }
+    }
+}
+
+.layout-rtl {
+    .layout-dashboard {
+        .sale-graph {
+            .order-tabs {
+                .order-tab {
+                    &:first-child {
+                        margin-right: 0;
+                        margin-left: 26px;
+                    }
+                }
+            }
+        }
+        .traffic {
+            .traffic-tabs { 
+                .traffic-tab {
+                    margin-right: 0px;
+                    margin-left: 5px;
+                }
+            }
+        }
+        .leaderboard {
+            > ul {
+                 li {
+                    background-color: $contentBgColor;
+                    cursor: pointer;
+                    .person {
+                        > img {
+                            margin-right: 0px;
+                            margin-left: 12px;
+                        }
+                    }
+                    .person-numbers { 
+                        > h6 {
+                            margin-right: 0px;
+                            margin-left: 12px;
+                        }
+                    }
+
+                    &:hover {
+                        background-color: $contentAltBgColor;
+                    }
+                }
+            }
+        }
+
+        .product-list {
+            > ul {
+                 li {
+                    .product {
+                        > img {
+                            margin-right: 0px;
+                            margin-left: 12px;
+                        }
+                    }
+
+                    &:hover {
+                        background-color: $contentAltBgColor;
+                    }
+                }
+            }
+        }
+    }
+}

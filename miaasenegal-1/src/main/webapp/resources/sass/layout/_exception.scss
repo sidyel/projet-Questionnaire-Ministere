@@ -1,0 +1,119 @@
+body {
+    &.exception-body {
+        height: 100vh;
+
+        .exception-top {
+            height: 30%;
+            @include flex();
+            @include flex-align-center();
+            @include flex-justify-center();
+            
+            img {
+                width: 100px;
+                display: block;
+            }
+        }
+        
+        .exception-bottom {
+            height: 70%;
+            @include flex();
+            @include flex-align-center();
+            flex-direction: column;
+            
+            .exception-wrapper {
+                padding: 50px;
+                text-align: center;
+                box-sizing: border-box;
+                
+                .exception-summary {
+                    display: block;
+                    color: #ffffff;
+                    font-size: 36px;
+                    font-weight: bold;
+                    margin-bottom: 20px;
+                }
+                
+                .exception-detail {
+                    display: block;
+                    color: #ffffff;
+                    margin-bottom: 50px;
+                }
+                
+                button {
+                    width: 75%;
+                    display: block;
+                    margin: 0 auto 100px auto;
+                }
+                
+                .logo-icon {
+                    height: 56px;
+                    display: block;
+                    margin: 0 auto 20px auto;
+                }
+                
+                .exception-footer {
+                    color: #ffffff;
+                }
+            }
+        }
+        
+        &.error-page {
+            background: linear-gradient(0deg, #781919 0%, #CE5051 100%);
+            .exception-top {
+                background-color: #f0f3f5;
+            }
+        }
+        
+        &.access-page {
+            background: linear-gradient(0deg, #812038 0%, #f16383 100%);
+            
+            .exception-top {
+                background-color: #f0f3f5;
+            }
+        }
+        
+        &.notfound-page {
+            background: linear-gradient(0deg, #006D6D 0%, #00ACAC 100%);
+            
+            .exception-top {
+                background-color: #f0f3f5;
+            }
+        }
+
+        .ui-button {
+            background-color: #ffffff;
+            border-color: #ffffff;
+            color: #515C66;
+
+            &:enabled:hover {
+                background-color: #EDF4F7;
+                border-color: #EDF4F7;
+                color: #515C66;
+            }
+
+            &:enabled:active {
+                background-color: #DBE9EF;
+                border-color: #DBE9EF;
+                color: #515C66;
+            }
+
+            &:focus {
+                outline: 0 none;
+                outline-offset: 0;
+                box-shadow: 0 0 0 0.2rem #DBE9EF;
+            }
+        }
+    }
+}
+
+@media (max-width: 640px) {
+    body {
+        &.exception-body {
+            .exception-bottom {
+                .exception-wrapper {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}

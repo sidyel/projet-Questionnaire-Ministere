@@ -1,0 +1,202 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Gestion Divisions</ui:define>
+
+	<ui:define name="viewname">
+        <li><p:link outcome="/adminPage">Admin</p:link></li>
+		<li><i class="pi pi-chevron-right"></i></li>
+		<li><p:link outcome="/divisionCRUD">Divisions</p:link></li>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form">
+			<div class="grid crud-demo">
+				<div class="col-12">
+					<div class="card">
+						<p:growl id="messages" showDetail="true" />
+
+						<!-- Toolbar -->
+						<p:toolbar styleClass="mb-4">
+							<p:toolbarGroup>
+								<p:commandButton value="New" icon="pi pi-plus"
+									actionListener="#{divisionView.openNew}"
+									update="manage-div-content"
+									oncomplete="PF('manageDivisionDialog').show()"
+									styleClass="ui-button-success" style="margin-right: .5rem" />
+								<p:commandButton id="delete-divisions-button"
+									value="#{divisionView.deleteButtonMessage}" icon="pi pi-trash"
+									actionListener="#{divisionView.deleteSelectedDivisions}"
+									styleClass="ui-button-danger"
+									
+									update="@this">
+<!-- 									disabled="#{!divisionView.hasSelectedDivisions()}"
+ -->									<p:confirm header="Confirmation"
+										message="Delete the selected divisions?"
+										icon="pi pi-exclamation-triangle" />
+								</p:commandButton>
+							</p:toolbarGroup>
+							
+						</p:toolbar>
+
+						<!-- DataTable -->
+						<p:dataTable id="dt-divisions" widgetVar="dtDivisions"
+							var="division" value="#{divisionView.divisions}" reflow="true"
+							styleClass="products-table"
+							selection="#{divisionView.selectedDivisions}"
+							rowKey="#{division.iddivision}" paginator="true" rows="10"
+							rowSelectMode="add" paginatorPosition="bottom">
+							<f:facet name="header">
+								<div class="products-table-header">
+									<span style="font-weight: bold">Manage Divisions</span> <span
+										class="filter-container ui-input-icon-left"> <i
+										class="pi pi-search"></i> <p:inputText id="globalFilter"
+											onkeyup="PF('dtDivisions').filter()" placeholder="Search" />
+									</span>
+								</div>
+							</f:facet>
+
+							<p:ajax event="rowSelect" update=":form:delete-divisions-button" />
+							<p:ajax event="rowUnselect"
+								update=":form:delete-divisions-button" />
+							<p:ajax event="rowSelectCheckbox"
+								update=":form:delete-divisions-button" />
+							<p:ajax event="rowUnselectCheckbox"
+								update=":form:delete-divisions-button" />
+							<p:ajax event="toggleSelect"
+								update=":form:delete-divisions-button" />
+
+							<!-- Colonne de sélection -->
+							<p:column selectionMode="multiple" exportable="false" />
+
+							<!-- Colonnes d'information -->
+							<p:column headerText="ID" sortBy="#{division.iddivision}"
+								filterBy="#{division.iddivision}">
+								<h:outputText value="#{division.iddivision}" />
+							</p:column>
+							<p:column headerText="Libellé" sortBy="#{division.libelle}"
+								filterBy="#{division.libelle}">
+								<h:outputText value="#{division.libelle}" />
+							</p:column>
+							<p:column headerText="Code" sortBy="#{division.code}"
+								filterBy="#{division.code}">
+								<h:outputText value="#{division.code}" />
+							</p:column>
+							<p:column headerText="Date Création"
+								sortBy="#{division.datecreation}"
+								filterBy="#{division.datecreation}">
+								<h:outputText value="#{division.datecreation}" />
+							</p:column>
+							<p:column headerText="Nombre Membres"
+								sortBy="#{division.nombremembres}"
+								filterBy="#{division.nombremembres}">
+								<h:outputText value="#{division.nombremembres}" />
+							</p:column>
+							<p:column headerText="Etat" sortBy="#{division.etat}"
+								filterBy="#{division.etat}">
+								<h:outputText value="#{division.etat}" />
+							</p:column>
+							<p:column headerText="Institution"
+								sortBy="#{division.institution.libelle}"
+								filterBy="#{division.institution.libelle}">
+								<h:outputText value="#{division.institution.libelle}" />
+							</p:column>
+
+							<!-- Colonne Actions -->
+							<p:column exportable="false">
+								<p:commandButton icon="pi pi-pencil"
+									update=":form:manage-div-content"
+									oncomplete="PF('manageDivisionDialog').show()"
+									styleClass="edit-button rounded-button ui-button-success"
+									process="@this">
+									<f:setPropertyActionListener value="#{division}"
+										target="#{divisionView.selectedDivision}" />
+								</p:commandButton>
+								<p:commandButton class="ui-button-warning rounded-button"
+									icon="pi pi-trash" process="@this"
+									oncomplete="PF('deleteDivisionDialog').show()">
+									<f:setPropertyActionListener value="#{division}"
+										target="#{divisionView.selectedDivision}" />
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+
+						<!-- Dialog Création/Mise à jour -->
+						<p:dialog header="Division Details" showEffect="fade" modal="true"
+							widgetVar="manageDivisionDialog" responsive="true">
+							<p:outputPanel id="manage-div-content" class="ui-fluid">
+								<p:outputPanel
+									rendered="#{not empty divisionView.selectedDivision}">
+									<div class="field">
+										<p:selectOneMenu
+											value="#{divisionView.institution}">
+											<f:selectItem itemLabel="Sélectionner une institution"
+												itemValue="" />
+											<f:selectItems
+												value="#{divisionView.institutions}" var="cat"
+												itemLabel="#{cat.libelle}" itemValue="#{cat.idins}" />
+										</p:selectOneMenu>
+
+									</div>
+									<div class="field">
+										<p:outputLabel for="libelle" value="Libellé" />
+										<p:inputText id="libelle"
+											value="#{divisionView.selectedDivision.libelle}"
+											required="true" />
+									</div>
+									<div class="field">
+										<p:outputLabel for="code" value="Code" />
+										<p:inputText id="code"
+											value="#{divisionView.selectedDivision.code}" />
+									</div>
+									
+						
+									<div class="field">
+										<p:outputLabel for="etat" value="Etat" />
+										<p:inputText id="etat"
+											value="#{divisionView.selectedDivision.etat}" />
+									</div>
+									
+								</p:outputPanel>
+							</p:outputPanel>
+
+							<f:facet name="footer">
+								<p:commandButton value="Save" icon="pi pi-check"
+									actionListener="#{divisionView.saveDivision}"
+									update="manage-div-content" process="manage-div-content @this" />
+								<p:commandButton value="Cancel" icon="pi pi-times"
+									onclick="PF('manageDivisionDialog').hide()"
+									class="ui-button-secondary" />
+							</f:facet>
+						</p:dialog>
+
+						<!-- Confirm Dialog pour suppression d'une division -->
+						<p:confirmDialog widgetVar="deleteDivisionDialog"
+							showEffect="fade" width="300" message="Delete the division?"
+							header="Confirm" severity="warn">
+							<p:commandButton value="Yes" icon="pi pi-check"
+								actionListener="#{divisionView.deleteDivision}" process="@this"
+								oncomplete="PF('deleteDivisionDialog').hide()" />
+							<p:commandButton value="No" type="button"
+								styleClass="ui-button-secondary" icon="pi pi-times"
+								onclick="PF('deleteDivisionDialog').hide()" />
+						</p:confirmDialog>
+
+						<!-- Global Confirm Dialog -->
+						<p:confirmDialog global="true" showEffect="fade" width="300">
+							<p:commandButton value="Yes" type="button"
+								styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+							<p:commandButton value="No" type="button"
+								styleClass="ui-confirmdialog-no ui-button-secondary"
+								icon="pi pi-times" />
+						</p:confirmDialog>
+
+					</div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

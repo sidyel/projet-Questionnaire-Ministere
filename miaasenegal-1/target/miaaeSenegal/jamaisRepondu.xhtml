@@ -1,0 +1,28 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Évaluation du Questionnaire</ui:define>
+
+	<ui:define name="content">
+		<h2
+			style="font-size: 24px; color: #007ad9; border-bottom: 3px solid #007ad9; padding-bottom: 5px;">
+			Les Employes qui n'on jamais repondus au : #{evaluationBean.questionnaire.libelle}</h2>
+		<p:dataTable id="employesTable" var="emp"
+			value="#{evaluationBean.employesSansReponse}"
+			emptyMessage="Aucun employé n'a été trouvé." style="margin-top:20px">
+			<p:column headerText="ID">
+				<h:outputText value="#{emp.personne.prenom}" />
+			</p:column>
+			<p:column headerText="Nom">
+				<h:outputText value="#{emp.personne.nom}" />
+			</p:column>
+			<p:column headerText="Matricule">
+				<h:outputText value="#{emp.matricule}" />
+			</p:column>
+
+		</p:dataTable>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,73 @@
+html {
+    height: 100%;
+    font-size: $fontSize;
+}
+ 
+body {
+    font-family: 'Open Sans';
+    font-size: $fontSize;
+    color: $textColor;
+    -webkit-font-smoothing: antialiased;
+    padding:0;
+    margin:0;
+    height: 100%;
+
+    &.main-body {
+        background: $bodyBgColor;
+    }
+    
+    a {
+        color: $primaryColor;
+        text-decoration: none;
+        
+        &:hover {
+            color: lighten($primaryColor, 5%);
+        }
+    }
+}
+
+.layout-mask {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 997;
+    width: 100%;
+    height: 100%;
+    animation-duration: $animationDuration;
+    animation-timing-function: $animationTimingFunction;
+    animation-fill-mode: forwards;
+}
+
+.layout-wrapper {
+    .layout-main {        
+        padding-top: 56px;
+        @include flex();
+        @include flex-direction-column();
+        @include flex-justify-between();
+        min-height: 100vh;
+
+        .layout-content {
+            padding: 32px;
+            padding-top: 12px;
+            flex: 1 1 0;
+        }
+    }
+}
+
+.layout-ajax-loader-icon {
+    position: fixed;
+    right: 2rem;
+    bottom: 2rem;
+    font-size: 2rem;
+    color: $textSecondaryColor;
+    z-index: 999;
+}
+
+@media (max-width: 992px) {
+    .layout-wrapper {
+        .layout-main {        
+            padding-top: 104px;
+        }
+    }
+}

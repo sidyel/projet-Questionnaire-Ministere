@@ -1,0 +1,98 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:po="http://primefaces.org/poseidon">
+
+    <style>
+        /* Conteneur principal */
+        .layout-topbar-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Logo */
+        .layout-topbar-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .layout-topbar-left img {
+            height: 55px;
+            border-radius: 10px;
+        }
+
+        /* Titre du Ministère */
+        .layout-topbar-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: black;
+            text-align: center;
+            flex: 1;
+            min-width: 280px;
+            margin: 0 10px;
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 768px) {
+            .layout-topbar-wrapper {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .layout-topbar-left {
+                flex-direction: column;
+                align-items: center;
+                margin-bottom: 5px;
+            }
+
+            .layout-topbar-title {
+                font-size: 16px;
+                width: 100%;
+            }
+        }
+    </style>
+
+    <div class="layout-topbar">
+        <div class="layout-topbar-wrapper">
+            <!-- Logo et Texte à gauche -->
+            <div class="layout-topbar-left">
+                <!-- Logo du Sénégal -->
+                <h:link id="logolink" outcome="/adminPage" style="display: flex; align-items: center; text-decoration: none;">
+                    <p:graphicImage name="images/drapeauSenegal.png" library="poseidon-layout" />
+                </h:link>
+          
+            </div>
+            <!-- Texte du Ministère -->
+            <h2 class="layout-topbar-title">
+                Ministère de l'Intégration Africaine et des Affaires étrangères - MIAAE
+            </h2>
+             <h:form>
+				<p:outputLabel value="Sélectionner la langue : " />
+
+				<p:selectOneMenu value="#{languageBean.language}"
+					onchange="submit()" label="Select Language">
+					<!-- Option pour l'anglais -->
+					<f:selectItem itemValue="en" itemLabel="English">
+						<h:graphicImage name="resources/images/eng.jpeg" alt="English"
+							style="width: 20px; height: 20px; margin-right: 10px;" />
+					</f:selectItem>
+
+					<!-- Option pour le français -->
+					<f:selectItem itemValue="fr" itemLabel="Français">
+						<h:graphicImage
+							name="resources/poseidon-layout/images/france.jpeg"
+							alt="Français"
+							style="width: 20px; height: 20px; margin-right: 10px;" />
+					</f:selectItem>
+				</p:selectOneMenu>
+			</h:form>
+        </div>
+    </div>
+
+</ui:composition>

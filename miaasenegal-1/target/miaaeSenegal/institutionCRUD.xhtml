@@ -1,0 +1,210 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Gestion Institutions</ui:define>
+
+	<ui:define name="viewname">
+        <li><p:link outcome="/adminPage">Admin</p:link></li>
+		<li><i class="pi pi-chevron-right"></i></li>
+		<li><p:link outcome="/institutionCRUD">Institutions</p:link></li>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form">
+			<div class="grid crud-demo">
+				<div class="col-12">
+					<div class="card">
+						<p:growl id="messages" showDetail="true" />
+
+						<!-- Toolbar -->
+						<p:toolbar styleClass="mb-4">
+							<p:toolbarGroup>
+								<p:commandButton value="New" icon="pi pi-plus"
+									actionListener="#{institutionView.openNew}"
+									update="manage-ins-content"
+									oncomplete="PF('manageInstitutionDialog').show()"
+									styleClass="ui-button-success" style="margin-right: .5rem" />
+								<p:commandButton id="delete-institutions-button"
+									value="#{institutionView.deleteButtonMessage}"
+									icon="pi pi-trash"
+									actionListener="#{institutionView.deleteSelectedInstitutions}"
+									styleClass="ui-button-danger"
+									
+									update="@this">
+									<p:confirm header="Confirmation"
+										message="Delete the selected institutions?"
+										icon="pi pi-exclamation-triangle" />
+								</p:commandButton>
+<!-- 								disabled="#{!institutionView.hasSelectedInstitutions()}"
+ -->							</p:toolbarGroup>
+							
+						</p:toolbar>
+
+						<!-- DataTable -->
+						<p:dataTable id="dt-institutions" widgetVar="dtInstitutions"
+							var="inst" value="#{institutionView.institutions}" reflow="true"
+							styleClass="products-table"
+							selection="#{institutionView.selectedInstitutions}"
+							rowKey="#{inst.idins}" paginator="true" rows="10"
+							rowSelectMode="add" paginatorPosition="bottom">
+							<f:facet name="header">
+								<div class="products-table-header">
+									<span style="font-weight: bold">Manage Institutions</span> <span
+										class="filter-container ui-input-icon-left"> <i
+										class="pi pi-search"></i> <p:inputText id="globalFilter"
+											onkeyup="PF('dtInstitutions').filter()" placeholder="Search" />
+									</span>
+								</div>
+							</f:facet>
+
+							<p:ajax event="rowSelect"
+								update=":form:delete-institutions-button" />
+							<p:ajax event="rowUnselect"
+								update=":form:delete-institutions-button" />
+							<p:ajax event="rowSelectCheckbox"
+								update=":form:delete-institutions-button" />
+							<p:ajax event="rowUnselectCheckbox"
+								update=":form:delete-institutions-button" />
+							<p:ajax event="toggleSelect"
+								update=":form:delete-institutions-button" />
+
+							<!-- Colonne de sélection -->
+							<p:column selectionMode="multiple" exportable="false" />
+
+							<!-- Colonnes d'information -->
+							<p:column headerText="ID" sortBy="#{inst.idins}"
+								filterBy="#{inst.idins}">
+								<h:outputText value="#{inst.idins}" />
+							</p:column>
+							<p:column headerText="Libellé" sortBy="#{inst.libelle}"
+								filterBy="#{inst.libelle}">
+								<h:outputText value="#{inst.libelle}" />
+							</p:column>
+							<p:column headerText="Code" sortBy="#{inst.code}"
+								filterBy="#{inst.code}">
+								<h:outputText value="#{inst.code}" />
+							</p:column>
+							<p:column headerText="Date Création"
+								sortBy="#{inst.datecreation}" filterBy="#{inst.datecreation}">
+								<h:outputText value="#{inst.datecreation}" />
+							</p:column>
+							<p:column headerText="Nombre Membres"
+								sortBy="#{inst.nombremembres}" filterBy="#{inst.nombremembres}">
+								<h:outputText value="#{inst.nombremembres}" />
+							</p:column>
+							<p:column headerText="Etat" sortBy="#{inst.etat}"
+								filterBy="#{inst.etat}">
+								<h:outputText value="#{inst.etat}" />
+							</p:column>
+
+							<!-- Actions -->
+							<p:column exportable="false">
+								<p:commandButton icon="pi pi-pencil"
+									update=":form:manage-ins-content"
+									oncomplete="PF('manageInstitutionDialog').show()"
+									styleClass="edit-button rounded-button ui-button-success"
+									process="@this">
+									<f:setPropertyActionListener value="#{inst}"
+										target="#{institutionView.selectedInstitution}" />
+								</p:commandButton>
+								<p:commandButton class="ui-button-warning rounded-button"
+									icon="pi pi-trash" process="@this"
+									oncomplete="PF('deleteInstitutionDialog').show()">
+									<f:setPropertyActionListener value="#{inst}"
+										target="#{institutionView.selectedInstitution}" />
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+
+						<!-- Dialog pour Création/Mise à jour -->
+						<p:dialog header="Institution Details" showEffect="fade"
+							modal="true" widgetVar="manageInstitutionDialog"
+							responsive="true">
+							<p:outputPanel id="manage-ins-content" class="ui-fluid">
+								<p:outputPanel
+									rendered="#{not empty institutionView.selectedInstitution}">
+									<div class="field">
+										<p:selectOneMenu value="#{institutionView.categorieinstitution}">
+											<f:selectItem itemLabel="Sélectionner une catégorie"
+												itemValue="" />
+											<f:selectItems value="#{institutionView.categorieinstitutions}" var="cat"
+												itemLabel="#{cat.libelle}" itemValue="#{cat.idcatins}" />
+										</p:selectOneMenu>
+
+									</div>
+									<div class="field">
+										<p:outputLabel for="libelle" value="Libellé" />
+										<p:inputText id="libelle"
+											value="#{institutionView.selectedInstitution.libelle}"
+											required="true" />
+									</div>
+									<div class="field">
+										<p:outputLabel for="code" value="Code" />
+										<p:inputText id="code"
+											value="#{institutionView.selectedInstitution.code}" />
+									</div>
+									<div class="field">
+										<p:outputLabel for="datecreation" value="Date Création" />
+										<p:inputText id="datecreation"
+											value="#{institutionView.selectedInstitution.datecreation}" />
+									</div>
+									<div class="field">
+										<p:outputLabel for="nombremembres" value="Nombre Membres" />
+										<p:inputNumber id="nombremembres"
+											value="#{institutionView.selectedInstitution.nombremembres}" />
+									</div>
+									<div class="field">
+										<p:outputLabel for="etat" value="Etat" />
+										<p:inputText id="etat"
+											value="#{institutionView.selectedInstitution.etat}" />
+									</div>
+									<div class="field">
+										<p:outputLabel for="categorieinstitution" value="categorie institution" />
+										<p:inputNumber id="categorieinstitution"
+											value="#{institutionView.selectedInstitution.categorieinstitution.libelle}" />
+									</div>
+								</p:outputPanel>
+							</p:outputPanel>
+
+							<f:facet name="footer">
+								<p:commandButton value="Save" icon="pi pi-check"
+									actionListener="#{institutionView.saveInstitution}"
+									update="manage-ins-content" process="manage-ins-content @this" />
+								<p:commandButton value="Cancel" icon="pi pi-times"
+									onclick="PF('manageInstitutionDialog').hide()"
+									class="ui-button-secondary" />
+							</f:facet>
+						</p:dialog>
+
+						<!-- Confirm Dialog pour suppression d'une institution -->
+						<p:confirmDialog widgetVar="deleteInstitutionDialog"
+							showEffect="fade" width="300" message="Delete the institution?"
+							header="Confirm" severity="warn">
+							<p:commandButton value="Yes" icon="pi pi-check"
+								actionListener="#{institutionView.deleteInstitution}"
+								process="@this"
+								oncomplete="PF('deleteInstitutionDialog').hide()" />
+							<p:commandButton value="No" type="button"
+								styleClass="ui-button-secondary" icon="pi pi-times"
+								onclick="PF('deleteInstitutionDialog').hide()" />
+						</p:confirmDialog>
+
+						<!-- Global Confirm Dialog -->
+						<p:confirmDialog global="true" showEffect="fade" width="300">
+							<p:commandButton value="Yes" type="button"
+								styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+							<p:commandButton value="No" type="button"
+								styleClass="ui-confirmdialog-no ui-button-secondary"
+								icon="pi pi-times" />
+						</p:confirmDialog>
+
+					</div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

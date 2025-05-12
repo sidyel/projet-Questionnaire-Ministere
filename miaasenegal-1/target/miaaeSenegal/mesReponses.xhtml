@@ -1,0 +1,38 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/templateEmploye.xhtml">
+
+	<ui:define name="title">Le New Deal Technologique pour la transformation numérique du Sénégal</ui:define>
+
+	<ui:define name="viewname">
+		<li>Accueil</li>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="reponsesForm">
+			<p:panel header="Mes Réponses pour le Questionnaire"
+				style="margin-bottom:20px;">
+				<p:dataTable value="#{questionView.reponses}" var="rep"
+					paginator="true" rows="10">
+					<p:column headerText="Question">
+						<h:outputText value="#{rep.question.libelle}" />
+					</p:column>
+					<p:column headerText="Réponse">
+						<h:outputText value="#{rep.valeur}" />
+					</p:column>
+					<p:column headerText="Date de réponse">
+						<h:outputText value="#{rep.datereponse}" />
+					</p:column>
+					<p:column headerText="État">
+						<h:outputText value="#{rep.etat}" />
+					</p:column>
+				</p:dataTable>
+				<p:commandButton value="Retour"
+					action="acceuil.xhtml?faces-redirect=true" ajax="false"
+					style="margin-top:10px;" />
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

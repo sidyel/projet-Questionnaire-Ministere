@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+    
+    <name>primefaces_poseidon</name>
+    
+    <application>
+		<!-- Définit le bundle de messages -->
+		<resource-bundle>
+			<base-name>messages</base-name>
+			<var>msg</var>
+		</resource-bundle>
+
+		<!-- Définit la langue par défaut -->
+		<locale-config>
+			<default-locale>fr</default-locale>
+		</locale-config>
+	</application>
+    
+    <component>
+        <component-type>org.primefaces.component.PoseidonMenu</component-type>
+        <component-class>org.primefaces.poseidon.component.PoseidonMenu</component-class>
+    </component>
+    
+    <render-kit>
+        <renderer>
+            <component-family>org.primefaces.component</component-family>
+            <renderer-type>org.primefaces.component.PoseidonMenuRenderer</renderer-type>
+            <renderer-class>org.primefaces.poseidon.component.PoseidonMenuRenderer</renderer-class>
+        </renderer>
+    </render-kit>
+    
+</faces-config>

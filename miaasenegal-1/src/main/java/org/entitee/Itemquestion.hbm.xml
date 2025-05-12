@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 26 f?vr. 2025, 12:37:11 by Hibernate Tools 4.3.6.Final -->
+<hibernate-mapping>
+    <class name="org.entitee.Itemquestion" table="itemquestion" schema="public" optimistic-lock="version">
+        <id name="iditemquestion" type="int">
+            <column name="iditemquestion" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="question" class="org.entitee.Question" fetch="select">
+            <column name="idquestion" not-null="true" />
+        </many-to-one>
+        <property name="valeur" type="string">
+            <column name="valeur" />
+        </property>
+        <property name="datecreation" type="string">
+            <column name="datecreation" length="254" />
+        </property>
+        <property name="numeroordre" type="java.lang.Integer">
+            <column name="numeroordre" />
+        </property>
+    </class>
+</hibernate-mapping>
